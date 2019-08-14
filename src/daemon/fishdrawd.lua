@@ -43,7 +43,7 @@ function FISH_DRAW_D:generate_reward_rate(player, fishes, gunrate, fishicon)
     end
 
     ---! 返回剩余鱼币
-    return fishicon 
+    return fishicon
 end
 
 ---! 游戏内抽奖
@@ -99,7 +99,7 @@ function FISH_DRAW_D:draw(player, msgData)
             player:change_prop_count(propId, propCount, PropRecieveType.kPropChangeTypeGameDraw)
             props[#props + 1] = { propId = propId, propCount = propCount, }
         else
-            for idx = 1, propCount do 
+            for idx = 1, propCount do
                 seniorProps[#seniorProps + 1] = player:add_senior_prop_quick(propId)
             end
         end

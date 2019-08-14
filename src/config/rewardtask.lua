@@ -1,4 +1,3 @@
-
 local tbl = CONFIG_D:get_table("rewardtask")
 if not tbl then
     return
@@ -47,7 +46,7 @@ for key, row in pairs(tbl) do
             config.reward = tbl
         end
     end
-    
+
     configs[config.id] = config
 end
 

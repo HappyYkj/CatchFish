@@ -2,7 +2,7 @@
 local function finish_freeze(desk)
     ---! 获取冰冻开始时间
     local freeze_start_time = desk:query_temp("freeze", "start_time")
-    
+
     ---! 清理定时器标志位
     desk:delete_temp("freeze", "timer_id")
 
@@ -11,7 +11,7 @@ local function finish_freeze(desk)
 
     ---! 重置冰冻发起人id
     desk:delete_temp("freeze", "player_id")
-    
+
     ---! 刷新召唤鱼的信息
     desk:flush_visable_callfishes(freeze_start_time)
 

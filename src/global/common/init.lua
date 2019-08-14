@@ -1,12 +1,19 @@
 local post_init_funcs = {}
 
-function register_post_init(func)
-    post_init_funcs[#post_init_funcs + 1] = func
+local error_func = function(err)
+    spdlog.error(err)
+    spdlog.error(debug.traceback())
 end
 
-function post_init(...)
+function register_post_init(func, ...)
+    local para = table.pack(...)
+    local wrap = function() func(table.unpack(para)) end
+    post_init_funcs[#post_init_funcs + 1] = wrap
+end
+
+function post_init()
     for _, func in ipairs(post_init_funcs) do
-        pcall(func, ...)
+        xpcall(func, error_func)
     end
 end
 

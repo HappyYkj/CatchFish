@@ -52,17 +52,3 @@ function USER_OB:generate_player_info()
     data.chairId = self:get_chair_id()
     return data
 end
-
--------------------------------------------------------------------------------
----!
--------------------------------------------------------------------------------
-
----! 更新上次射击时间
-function USER_OB:update_shoot_time()
-    self:set_temp("lastShootTime", os.time())
-end
-
----! 获取上次射击时间
-function USER_OB:get_shoot_time()
-    return self:query_temp("lastShootTime") or 0
-end

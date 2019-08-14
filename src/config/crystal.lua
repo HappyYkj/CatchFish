@@ -1,4 +1,3 @@
-
 local tbl = CONFIG_D:get_table("crystal")
 if not tbl then
     return
@@ -17,7 +16,6 @@ end
 -------------------------------------------------------------------------------
 ---! 对外接口
 -------------------------------------------------------------------------------
-
 CRYSTAL_CONFIG = {}
 
 function CRYSTAL_CONFIG:get_crystal_rate_cost(history_drop)
@@ -95,10 +93,10 @@ function CRYSTAL_CONFIG:get_crystal_rate_drop(fish_type, gunrate)
 	for index, id in pairs(tab) do
 		table.insert(keys, index)
 	end
-	if #keys <= 0 then 
+	if #keys <= 0 then
 		return 0
 	end
-	
+
 	table.sort(keys)
 	local rewards = tab[#keys]
 	for _, id in ipairs(keys) do
@@ -106,7 +104,7 @@ function CRYSTAL_CONFIG:get_crystal_rate_drop(fish_type, gunrate)
 			rewards = tab[id]
 		end
 	end
-	
+
 	local weight = 0
 	local splitlist = {}
 	string.gsub(rewards, '[^%s;]+', function(reward)
@@ -114,21 +112,21 @@ function CRYSTAL_CONFIG:get_crystal_rate_drop(fish_type, gunrate)
 		string.gsub(reward, '[^%s,]+', function(item)
 			table.insert(splititem, item)
 		end)
-		
+
 		if #splititem == 2 and tonumber(splititem[2]) > 0 then
 			weight = weight + tonumber(splititem[2])
 			table.insert(splitlist, splititem)
-		end  
+		end
 	end)
-	
-	if weight > 0 then 
+
+	if weight > 0 then
 		local index = math.random(weight)
-		for _, splititem in ipairs(splitlist) do 
+		for _, splititem in ipairs(splitlist) do
 			if index < tonumber(splititem[2]) then
 				return tonumber(splititem[1])
 			end
 			index = index - tonumber(splititem[2])
-		end 
+		end
 	end
 	return 0
 end

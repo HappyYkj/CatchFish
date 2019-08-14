@@ -61,7 +61,7 @@ local function search_desk(desk_type)
         if desk:get_player_count() >= 4 then
             break
         end
-        
+
         return desk
     until true end
 end
@@ -87,7 +87,7 @@ local function generate_random_timeline(desk)
 
     ---! 清空历史冰冻状态
     desk:reset_freeze()
-    
+
     ---! 随机生成悬赏任务
     ----todo:
 
@@ -109,10 +109,10 @@ local function generate_random_fishgroup(desk)
 
     ---! 重置鱼线开始时间
     desk:set_temp("startTickCount", os.mtime())
-    
+
     ---! 清空所有杀鱼记录
     desk:remove_all_killed_fishes()
-    
+
     ---! 清空历史冰冻状态
     desk:reset_freeze()
 
@@ -258,7 +258,7 @@ function ROOM_D:assign_match_desk(players, desk_type)
         end
         spdlog.debug("desk", string.format("player %s, assign desk:%s, chair:%s", player:get_id(), desk:get_id(), chair_id))
     end
-    
+
     spdlog.debug("desk", string.format("desk [%s] assigned", desk:get_id()))
     return desk
 end
@@ -280,7 +280,7 @@ function ROOM_D:destory_desk(desk, notify)
     for _, player in ipairs(players) do
         ROOM_D:leave_desk(player, notify)
     end
-    
+
     ---! 清理关系映射标
     local desk_type = desk:get_grade()
     local desk_lst = room_desk_map[desk_type]

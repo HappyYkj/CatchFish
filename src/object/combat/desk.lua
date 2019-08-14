@@ -1,3 +1,5 @@
+local max_chair_count = 4
+
 DESK_OB = class("DESK_OB")
 DESK_OB:inherit(F_COMN_DBASE)
 DESK_OB:inherit(F_COMBAT_BOMB)
@@ -6,12 +8,9 @@ DESK_OB:inherit(F_COMBAT_FREEZE)
 DESK_OB:inherit(F_COMBAT_BULLET)
 DESK_OB:inherit(F_COMBAT_CALLFISH)
 
-local max_chair_count = 4
-
 -------------------------------------------------------------------------------
 ---! 对外接口
 -------------------------------------------------------------------------------
-
 function DESK_OB:set_id(id)
     return self:set("id", id)
 end
@@ -20,7 +19,7 @@ function DESK_OB:get_id()
     return self:query("id")
 end
 
-function DESK_OB:assign_chair(user_ob)   
+function DESK_OB:assign_chair(user_ob)
     local chair_lst = self:query("chair") or {}
     for chair_id = 1, max_chair_count do repeat
         if chair_lst[chair_id] then
@@ -87,7 +86,7 @@ function DESK_OB:get_players()
         if not user_ob then
             break
         end
-        
+
         players[#players + 1] = user_ob
     until true end
     return players
@@ -105,7 +104,7 @@ function DESK_OB:get_player_count()
         if not user_ob then
             break
         end
-        
+
         count = count + 1
     until true end
     return count

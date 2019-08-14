@@ -394,9 +394,6 @@ function BULLET_D:send_bullet(player, msgRecv)
         player:change_prop_count(GamePropIds.kGamePropIdsFishIcon, -bullet.needCost, PropRecieveType.kPropChangeTypeSendBullet)
     end
 
-    ---! 更新当前射击时间
-    player:update_shoot_time()
-
     ---! 加入到子弹管理模块中
     desk:add_bullet(bullet)
 
@@ -764,9 +761,6 @@ function BULLET_D:throw_bomb(player, msgData)
         player:send_packet("MSGS2CNBomb", result)
         return
     end
-
-    ---! 更新当前射击时间
-    player:update_shoot_time()
 
     ---! 将核弹加入核弹管理
     player:get_desk():add_bomb(player:get_id(), msgData.nBombId, msgData.useType, msgData.nPropID)

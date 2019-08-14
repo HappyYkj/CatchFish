@@ -1,7 +1,4 @@
 local function main (userOb, msgData)
-    ---! 更新射击时间
-    userOb:update_shoot_time()
-
     ---! 是否是第一个玩家
     ROOM_D:check_first_player(userOb)
 
@@ -17,7 +14,7 @@ local function main (userOb, msgData)
         if #bullets <= 0 then
             break
         end
-    
+
         local result = {}
         result.bullets = bullets
         userOb:send_packet("MSGS2CBulletStatus", result)

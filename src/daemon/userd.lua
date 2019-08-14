@@ -1,3 +1,5 @@
+local config = require "config"
+
 ---! 映射表
 local load_map = {}     ---! 正在加载的玩家对象
 local user_map = {}     ---! 已经加载的玩家对象
@@ -33,7 +35,10 @@ local function _load_user(user_id)
 end
 
 local function _check_user()
+    ---! 获取当前时间
     local now_time = os.time()
+
+    ---! 遍历在线玩家
     for _, user_ob in pairs(user_map) do
         local ok = pcall(function()
             local save_time = user_ob:query_temp("save_time")
@@ -46,7 +51,7 @@ local function _check_user()
             local cmd_time = user_ob:query_temp("command_time")
             if not cmd_time or now_time - cmd_time > 300 then
                 ---! 断开玩家连接
-                USER_D:disconnect(user_ob)
+                USER_D:disconnect(user_ob, 2)
 
                 ---! 清理临时数据
                 user_ob:delete_temp("save_time")
@@ -68,8 +73,35 @@ local function _check_user()
         end
     end
 
-    spdlog.info("user", string.format("user_map size : %d, temp_map size : %d, load_map size : %d",
-                                      table.len(user_map), table.len(temp_map), table.len(load_map)))
+    ---! 遍历缓存玩家
+    for user_id, user_ob in pairs(temp_map) do
+        local ok = pcall(function()
+            if USER_D:is_loading(user_id) then
+                return
+            end
+
+            if USER_D:find_user(user_id) then
+                return
+            end
+
+            local cached_time = user_ob:query_temp("cached_time")
+            if not cached_time then
+                return
+            end
+
+            if now_time < cached_time + 1800 then
+                return
+            end
+
+            temp_map[user_id] = nil
+        end)
+
+        if not ok then
+            spdlog.error("user", string.format("clean cached data failed, user = %s, data = %s", user_ob:get_id(), serialize(user_ob:query_entire_dbase())))
+        end
+    end
+
+    spdlog.info("user", string.format("user_map size : %d, temp_map size : %d, load_map size : %d", table.len(user_map), table.len(temp_map), table.len(load_map)))
 end
 
 -------------------------------------------------------------------------------
@@ -128,7 +160,6 @@ function USER_D:destroy_user(user_ob)
     local user_id = user_ob:get_id()
     user_map[user_id] = nil
     temp_map[user_id] = nil
-    user_ob:set_temp("destroy", os.mtime())
 end
 
 ---! 初始对象
@@ -165,6 +196,9 @@ function USER_D:enter_world(user_ob)
     local user_id = user_ob:get_id()
     user_map[user_id] = user_ob
     spdlog.debug("userd", string.format("user [%s] enter world succ.", user_id))
+
+    ---! 记录登录时间
+    user_ob:set_temp("login_time", os.time())
 end
 
 ---! 离开游戏
@@ -175,6 +209,9 @@ function USER_D:leave_world(user_ob)
     local user_id = user_ob:get_id()
     user_map[user_id] = nil
     spdlog.debug("userd", string.format("user [%s] leave world succ.", user_id))
+
+    ---! 记录缓存时间
+    user_ob:set_temp("cached_time", os.time())
 end
 
 ---! 重连游戏
@@ -189,7 +226,7 @@ function USER_D:reconnect(user_ob)
 end
 
 ---! 断开游戏
-function USER_D:disconnect(user_ob)
+function USER_D:disconnect(user_ob, reason)
     local user_id = user_ob:get_id()
     spdlog.debug("userd", string.format("user [%s] disconnect world ...", user_id))
 
@@ -200,7 +237,7 @@ function USER_D:disconnect(user_ob)
 
     ---! 通知玩家离开游戏
     local result = {}
-    result.reason = 1
+    result.reason = reason or 1
     user_ob:send_packet("MSGS2CLeaveGame", result)
 end
 
@@ -224,7 +261,7 @@ function USER_D:send_hall_info(user_ob)
     local result = {}
     result.playerInfo = user_ob:generate_player_info()
     result.serverTime = os.time()
-    result.enableDebug = DEBUG_VERSION
+    result.enableDebug = config.debug and true or false
     user_ob:send_packet("MSGS2CGetHallInfo", result)
 end
 
@@ -293,10 +330,6 @@ function USER_D:check_player_upgrade(player, fishicon, gunrate)
     local result = {}
     result.playerId = player:get_id()
     result.newGrade = new_grade
-    --[[
-    result.dropFishIcon = rewards[GamePropIds.kGamePropIdsFishIcon]
-    result.dropCrystal = rewards[GamePropIds.kGamePropIdsCrystal]
-    --]]
     result.dropProps = props
     result.dropSeniorProps = senior_props
     player:brocast_packet("MSGS2CUpgrade", result)

@@ -1,6 +1,6 @@
 local json = require "json"
 
-LISTEN_D:register_listen_channel("game_channel_lua", function (data)
+SERVICE_D:register("game_channel_lua", function (data)
     local recv = json.decode(data)
     if not recv then
         spdlog.warn("game_channel", string.format("parse error, data : %s", data));
@@ -21,12 +21,12 @@ LISTEN_D:register_listen_channel("game_channel_lua", function (data)
         spdlog.warn("game_channel", string.format("member[Sender] type error, data : %s", data));
         return
     end
-    
+
     if not recv.userName then
         spdlog.warn("game_channel", string.format("member[userName] type error, data : %s", data));
         return
     end
-    
+
     if not recv.MsgData then
         spdlog.warn("game_channel", string.format("member[MsgData] type error, data : %s", data));
         return
@@ -41,6 +41,6 @@ LISTEN_D:register_listen_channel("game_channel_lua", function (data)
             return
         end
     end
-    
+
     COMMAND_D:process_command(recv.userName, recv.MsgType, MsgData)
 end)

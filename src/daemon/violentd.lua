@@ -60,29 +60,29 @@ end
 ---! 获取当前狂暴倍率
 function VIOLENT_D:get_violent_multiply(gunrate, ratio)
     local multiply
-	if ratio == 2 then
-		if gunrate <= 80 then
-			multiply = 250
-		elseif gunrate <= 150 then
-			multiply = 200
-		elseif gunrate <= 700 then
-			multiply = math.random(170,200)
-		elseif gunrate <= 3000 then
-			multiply = math.random(150,200)
-		else
-			multiply = math.random(150,200)
-		end
-	elseif ratio == 4 then
-		if gunrate <= 80 then
-			multiply = 500
-		elseif gunrate <= 150 then
-			multiply = 400
-		elseif gunrate <= 700 then
-			multiply = math.random(340,400)
-		elseif gunrate <= 3000 then
-			multiply = math.random(300,400)
-		else
-			multiply = math.random(300,400)
+    if ratio == 2 then
+        if gunrate <= 80 then
+            multiply = 250
+        elseif gunrate <= 150 then
+            multiply = 200
+        elseif gunrate <= 700 then
+            multiply = math.random(170,200)
+        elseif gunrate <= 3000 then
+            multiply = math.random(150,200)
+        else
+            multiply = math.random(150,200)
+        end
+    elseif ratio == 4 then
+        if gunrate <= 80 then
+            multiply = 500
+        elseif gunrate <= 150 then
+            multiply = 400
+        elseif gunrate <= 700 then
+            multiply = math.random(340,400)
+        elseif gunrate <= 3000 then
+            multiply = math.random(300,400)
+        else
+            multiply = math.random(300,400)
         end
     else
         multiply = 100

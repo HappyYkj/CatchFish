@@ -82,14 +82,13 @@ for key, row in pairs(tbl) do repeat
             config.share_vip_props = tbl
         end
     end
-    
+
     configs[config.days] = config
 until true end
 
 -------------------------------------------------------------------------------
 ---! 对外接口
 -------------------------------------------------------------------------------
-
 CHECKIN_CONFIG = {}
 
 function CHECKIN_CONFIG:get_config_by_day(days)

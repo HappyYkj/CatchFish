@@ -1,7 +1,3 @@
-if not DEBUG_VERSION then
-    return
-end
-
 local json = require "json"
 
 local commands = {}

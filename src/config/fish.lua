@@ -35,14 +35,14 @@ for key, row in pairs(tbl) do
     config.name = row.name              -- 名称
     configs[config.id] = config
 
-    config.isPartBombFish = function () 
+    config.isPartBombFish = function ()
         return config.trace_type == traceType.kPartBombFish
     end
 
     config.isThunderFish = function ()
         return config.trace_type == traceType.kThunderFish
     end
-    
+
     config.isSameKindBombFish = function ()
         return config.trace_type == traceType.kSameKindBombFish
     end
@@ -107,7 +107,6 @@ end
 -------------------------------------------------------------------------------
 ---! 对外接口
 -------------------------------------------------------------------------------
-
 FISH_CONFIG = {}
 
 function FISH_CONFIG:get_config_by_id(id)

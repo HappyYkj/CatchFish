@@ -1,7 +1,6 @@
 -------------------------------------------------------------------------------
 ---! 对外接口
 -------------------------------------------------------------------------------
-
 FISHTICKET_CONFIG = {}
 
 -- 奖券鱼掉落数
@@ -43,7 +42,7 @@ function FISHTICKET_CONFIG:getFishTicketFishDrop(roomType, gunRate)
     else
         multiply = math.max(multiply, 40)
     end
-    
+
     return drop_base * multiply
 end
 

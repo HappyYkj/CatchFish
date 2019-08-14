@@ -31,7 +31,7 @@ local is_fisharray_on_frame = function (frame, timelineId, fisharrayId, pointRat
             if not fisharray then
                 return false
             end
-            
+
             if timeline.pathid ~= fisharray.arrId then
                 return false
             end
@@ -46,7 +46,7 @@ local is_fisharray_on_frame = function (frame, timelineId, fisharrayId, pointRat
             if start_frame > frame then
                 return false
             end
-            
+
             -- 总帧数
             local frame_count = #fishpath.pointdata
             if frame_count <= 0 then
@@ -73,7 +73,7 @@ local is_fisharray_on_frame = function (frame, timelineId, fisharrayId, pointRat
         if fishgroup.arrId ~= fisharray.arrId then
             return false
         end
-        
+
         local fishpath = FISH_PATH_CONFIG:get_config_by_id(fisharray.trace + 300000000)
         if not fishpath then
             return false
@@ -84,7 +84,7 @@ local is_fisharray_on_frame = function (frame, timelineId, fisharrayId, pointRat
         if start_frame > frame then
             return false
         end
-            
+
         -- 总帧数
         local frame_count = #fishpath.pointdata
         if frame_count <= 0 then
@@ -220,7 +220,7 @@ function FISH_D:get_fishid_by_fisharray(desk, timelineId, fisharrayId)
             -- 鱼串id不匹配
             return false
         end
-        
+
         return fisharray.fishid
     end
 end

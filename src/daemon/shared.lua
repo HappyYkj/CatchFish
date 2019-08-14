@@ -62,7 +62,7 @@ process_share_map[9] = function(player, share_type, share_args)
     if #task_config.share_reward <= 0 then
         return
     end
-    
+
     if not player:can_new_task_share(share_args) then
         return
     end
@@ -142,7 +142,7 @@ function SHARE_D:process_share(player, share_type, share_args)
             break
         end
 
-        for idx = 1, prop_count do 
+        for idx = 1, prop_count do
             senior_props[#senior_props + 1] = player:add_senior_prop_quick(prop_id)
         end
     until true end
@@ -164,4 +164,3 @@ function SHARE_D:process_share(player, share_type, share_args)
         player:brocast_packet("MSGS2CUpdatePlayerProp", result)
     end
 end
-
