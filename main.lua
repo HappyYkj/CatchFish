@@ -28,3 +28,4 @@ printf("Load all files OK. cost total secs = %s", cost)
 
 post_init()
 SERVICE_D:start()
+post_dest()

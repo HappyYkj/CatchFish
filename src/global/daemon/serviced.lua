@@ -12,7 +12,12 @@ local linda = lanes.linda()
 local service_map = {}
 
 -------------------------------------------------------------------------------
----! 内部接口
+---! CREATE TABLE TO HOLD LANES THREADS
+-------------------------------------------------------------------------------
+local lanes_threads = {}
+
+-------------------------------------------------------------------------------
+---! 内部方法
 -------------------------------------------------------------------------------
 local sleep_func = function(id, secs)
     sleep(secs)
@@ -66,6 +71,7 @@ function SERVICE_D:create(func, ...)
     else
         thread = lanes.gen("*", func)
     end
+    table.insert(lanes_threads, thread)
     thread(linda)
 end
 
@@ -75,4 +81,8 @@ end
 
 function SERVICE_D:post(channel, ...)
     return linda:send(channel, table.pack(...))
+end
+
+function SERVICE_D:queue(...)
+    return lanes.linda(...)
 end
