@@ -176,7 +176,7 @@ local function generate_drop_crystal(player, killed_fishes, gunrate, drop_props)
         else
             drop_props[drop_prop_id] = drop_props[drop_prop_id] + drop_count
         end
-    elseif drop_prop_id == GamePropIds.kGamePropFishTicket then
+    elseif drop_prop_id == GamePropIds.kGamePropIdsFishTicket then
         -- 获取奖券鱼掉落数
         local drop_prop_count = FISHTICKET_CONFIG:getFishTicketFishDrop(player:get_desk_grade(), gunrate)
         if drop_prop_count <= 0 then
@@ -304,10 +304,10 @@ local function generate_drop_fishticket(player, killed_fishes, gunrate, drop_pro
         end
 
         -- 记录玩家增加鱼券
-        if not drop_props[GamePropIds.kGamePropFishTicket] then
-            drop_props[GamePropIds.kGamePropFishTicket] = drop_prop_count
+        if not drop_props[GamePropIds.kGamePropIdsFishTicket] then
+            drop_props[GamePropIds.kGamePropIdsFishTicket] = drop_prop_count
         else
-            drop_props[GamePropIds.kGamePropFishTicket] = drop_props[GamePropIds.kGamePropFishTicket] + drop_prop_count
+            drop_props[GamePropIds.kGamePropIdsFishTicket] = drop_props[GamePropIds.kGamePropIdsFishTicket] + drop_prop_count
         end
     until true end
     return drop_props
@@ -391,7 +391,7 @@ function BULLET_D:send_bullet(player, msgRecv)
 
     ---! 扣除相关费用
     if bullet.needCost > 0 then
-        player:change_prop_count(GamePropIds.kGamePropIdsFishIcon, -bullet.needCost, PropRecieveType.kPropChangeTypeSendBullet)
+        player:change_prop_count(GamePropIds.kGamePropIdsFishIcon, -bullet.needCost, PropChangeType.kPropChangeTypeSendBullet)
     end
 
     ---! 加入到子弹管理模块中
@@ -519,7 +519,7 @@ function BULLET_D:batch_bullet(player, msgRecv)
 
     ---! 扣除相关费用
     if money_cost > 0 then
-        player:change_prop_count(GamePropIds.kGamePropIdsFishIcon, -money_cost, PropRecieveType.kPropChangeTypeSendBullet)
+        player:change_prop_count(GamePropIds.kGamePropIdsFishIcon, -money_cost, PropChangeType.kPropChangeTypeSendBullet)
     end
 
     ---! 加入到子弹管理模块中
@@ -642,7 +642,7 @@ function BULLET_D:hit_bullet(player, hitMessage)
 
         ---! 统一给玩家发放道具奖励
         for prop_id, prop_count in pairs(drop_props) do
-            player:change_prop_count(prop_id, prop_count, PropRecieveType.kPropChangeTypeKillFish)
+            player:change_prop_count(prop_id, prop_count, PropChangeType.kPropChangeTypeKillFish)
         end
 
         ---! 更新杀鱼任务
@@ -826,7 +826,7 @@ function BULLET_D:blast_bomb(player, msgData)
         end
 
         -- 扣除核弹道具
-        player:change_prop_count(bombData.propId, -1, PropRecieveType.kPropChangeTypeUseProp)
+        player:change_prop_count(bombData.propId, -1, PropChangeType.kPropChangeTypeUseProp)
     ---! 使用水晶
     elseif bombData.useType == 1 then
         -- 当前水晶-正在施放的核弹水晶=可用水晶
@@ -839,7 +839,7 @@ function BULLET_D:blast_bomb(player, msgData)
         end
 
         -- 扣除水晶道具
-        player:change_prop_count(GamePropIds.kGamePropIdsCrystal, -item_config.price_value, PropRecieveType.kPropChangeTypeUseProp)
+        player:change_prop_count(GamePropIds.kGamePropIdsCrystal, -item_config.price_value, PropChangeType.kPropChangeTypeUseProp)
     ---! 其他方式
     else
         local result = {}
@@ -940,7 +940,7 @@ function BULLET_D:blast_bomb(player, msgData)
         local fish_score = FISH_DRAW_D:generate_reward_rate(player, killed_fishes, use_gunrate, fish_score)
 
         ---! 给予相应鱼币
-        player:change_prop_count(GamePropIds.kGamePropIdsFishIcon, fish_score, PropRecieveType.kPropChangeTypeKillFish)
+        player:change_prop_count(GamePropIds.kGamePropIdsFishIcon, fish_score, PropChangeType.kPropChangeTypeKillFish)
     end
 
     ---! 更新杀鱼任务

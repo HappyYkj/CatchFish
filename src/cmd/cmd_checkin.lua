@@ -6,7 +6,7 @@ local function main (userOb, msgData)
     local sign = userOb:get_sign()
 
     ---! 是否有明日礼包
-    local senior_prop = userOb:get_senior_prop_by_id(GameSeniorPropIds.kGameSeniorPropIdsTomorrowGift)
+    local senior_prop = userOb:get_senior_prop_by_id(GamePropIds.kGamePropIdsTomorrowGift)
     if senior_prop then
         local result = {}
         result.isSuccess = false
@@ -42,53 +42,32 @@ local function main (userOb, msgData)
     ---! 设置签到标记
     userOb:set_sign()
 
-    local props = {}
-    local seniorProps = {}
-    
-    ---! 发放签到奖励
-    for propId, propCount in pairs(config.reward_props) do repeat
-        local itemConfig = ITEM_CONFIG:get_config_by_id(propId)
-        if not itemConfig then
-            break
-        end
+    ---! 普通签到奖励
+    local rewards = {}
+    for prop_id, prop_count in pairs(config.reward_props) do
+        rewards[prop_id] = prop_count
+    end
 
-        if not itemConfig.if_senior then
-            userOb:change_prop_count(propId, propCount, PropRecieveType.kPropChangeTypeSignIn)
-            props[#props + 1] = { propId = propId, propCount = propCount, }
-            break
-        end
-
-        for idx = 1, propCount do 
-            seniorProps[#seniorProps + 1] = userOb:add_senior_prop_quick(propId)
-        end
-    until true end
-    
     ---! vip额外奖励
     if userOb:get_vip_grade() >= config.vip then
-        for propId, propCount in pairs(config.vip_props) do repeat
-            local itemConfig = ITEM_CONFIG:get_config_by_id(propId)
-            if not itemConfig then
-                break
+        for prop_id, prop_count in pairs(config.vip_props) do
+            if rewards[prop_id] then
+                rewards[prop_id] = rewards[prop_id] + prop_count
+            else
+                rewards[prop_id] = prop_count
             end
-
-            if not itemConfig.if_senior then
-                userOb:change_prop_count(propId, propCount, PropRecieveType.kPropChangeTypeSignIn)
-                props[#props + 1] = { propId = propId, propCount = propCount, }
-                break
-            end
-
-            for idx = 1, propCount do 
-                seniorProps[#seniorProps + 1] = userOb:add_senior_prop_quick(propId)
-            end
-        until true end
+        end
     end
+
+    ---! 发放签到奖励
+    local props, senior_props = ITEM_D:give_user_props(userOb, rewards, PropChangeType.kPropChangeTypeSignIn)
 
     local result = {}
     result.isSuccess = true
     result.newSignInDays = userOb:get_days()
     result.sign = userOb:get_sign()
     result.props = props
-    result.seniorProps = seniorProps
+    result.seniorProps = senior_props
     userOb:brocast_packet("MSGS2CSignIn", result)
 end
 

@@ -16,7 +16,7 @@ function ONLINE_REWARD_D:update_online_reward_data(player)
     else
         ---! 计算间隔时间
         local duration = now - update_time
-        
+
         ---! 记录更新时间
         player:set("onlineReward", "updateTime", now)
 
@@ -38,7 +38,7 @@ function ONLINE_REWARD_D:update_online_reward_data(player)
         if not prop_id or not prop_count then
             return
         end
-    
+
         local need_time = ONLINE_REWARD_CONFIG:get_reward_need_time(gunrate, reward_count)
         if not need_time then
             return
@@ -98,7 +98,7 @@ function ONLINE_REWARD_D:get_online_reward(player)
 
     ---! 更新在线奖励数据
     player:update_online_reward_data()
-    
+
     if player:get_need_time() > player:get_online_time() then
         ---! 在线时间未符合要求
         ONLINE_REWARD_D:send_online_reward_data(player)
@@ -124,16 +124,7 @@ function ONLINE_REWARD_D:get_online_reward(player)
     player:add_reward_count()
 
     ---! 发放当前奖励物品
-    local props = {}
-    local senior_props = {}
-    if not item_config.if_senior then
-        player:change_prop_count(prop_id, prop_count, PropRecieveType.kPropChangeTypeOnlineReward)
-        props[#props + 1] = { propId = prop_id, propCount = prop_count, }
-    else
-        for idx = 1, prop_count do 
-            senior_props[#senior_props + 1] = player:add_senior_prop_quick(prop_id)
-        end
-    end
+    local props, senior_props = ITEM_D:give_user_props(player, { [prop_id] = prop_count, }, PropChangeType.kPropChangeTypeOnlineReward)
 
     ---! 广播给奖励信息
     local result = {}

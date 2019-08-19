@@ -59,7 +59,7 @@ function FISH_DRAW_D:draw(player, msgData)
 
     ---! 获取抽奖配置
     local draw_rate = player:get_draw_rate()
-    local fishticket = player:get_prop_count(GamePropIds.kGamePropFishTicket)
+    local fishticket = player:get_prop_count(GamePropIds.kGamePropIdsFishTicket)
     local crystal = player:get_prop_count(GamePropIds.kGamePropIdsCrystal)
     local grade = player:get_grade()
     local reward_config = REWARD_CONFIG:get_config_by_draw_rate(draw_rate, fishticket, crystal, grade)
@@ -72,8 +72,8 @@ function FISH_DRAW_D:draw(player, msgData)
     end
 
     ---! 生成抽奖结果
-    local propId, propCount = REWARD_CONFIG:get_item_by_config(reward_config)
-    if not propId or not propCount then
+    local prop_id, prop_count = REWARD_CONFIG:get_item_by_config(reward_config)
+    if not prop_id or not prop_count then
         local result = {}
         result.isSuccess = false
         result.playerId = player:get_id()
@@ -91,19 +91,7 @@ function FISH_DRAW_D:draw(player, msgData)
     player:add_draw_count(1)
 
     ---! 发放抽奖奖励
-    local props = {}
-    local seniorProps = {}
-    local item_config = ITEM_CONFIG:get_config_by_id(propId)
-    if item_config then
-        if not item_config.if_senior then
-            player:change_prop_count(propId, propCount, PropRecieveType.kPropChangeTypeGameDraw)
-            props[#props + 1] = { propId = propId, propCount = propCount, }
-        else
-            for idx = 1, propCount do
-                seniorProps[#seniorProps + 1] = player:add_senior_prop_quick(propId)
-            end
-        end
-    end
+    local props, senior_props = ITEM_D:give_user_props(player, { [prop_id] = prop_count, }, PropChangeType.kPropChangeTypeGameDraw)
 
     ---! 通知抽奖结果
     local result = {}
@@ -113,7 +101,7 @@ function FISH_DRAW_D:draw(player, msgData)
     result.killRewardFishInDay = player:get_kill_reward_fish()
     result.rewardRate = player:get_draw_rate()
     result.props = props
-    result.seniorProps = seniorProps
+    result.seniorProps = senior_props
     player:brocast_packet("MSGS2CDrawResult", result)
 end
 

@@ -21,7 +21,7 @@ function TASK_D:send_task_info(player)
     end
 
     ---! 发送新手任务信息
-    if NEWTASK_TYPE.ID_NEWTASKTYPE_UPGUNRATE == config.task_type then
+    if ENUM_TASK_TYPE.UPGRADE_CANNON == config.task_type then
         ---! 炮倍升级任务
         local result = {}
         result.nTaskID = task_id
@@ -183,24 +183,8 @@ function TASK_D:finish_task_by_rechage(player)
         end
     end
 
-    local props = {}
-    local seniorProps = {}
-    for prop_id, prop_count in pairs(rewards) do repeat
-        local item_config = ITEM_CONFIG:get_config_by_id(prop_id)
-        if not item_config then
-            break
-        end
-
-        if not item_config.if_senior then
-            player:change_prop_count(prop_id, prop_count, PropRecieveType.kPropChangeTypeNewTaskReward)
-            props[#props + 1] = { propId = prop_id, propCount = prop_count, }
-            break
-        end
-
-        for idx = 1, prop_count do
-            seniorProps[#seniorProps + 1] = player:add_senior_prop_quick(prop_id)
-        end
-    until true end
+    ---! 发放任务奖励
+    local props, senior_props = ITEM_D:give_user_props(player, rewards, PropChangeType.kPropChangeTypeNewTaskReward)
 
     ---! 刷新新手任务
     TASK_D:send_task_info(player)
@@ -213,7 +197,7 @@ function TASK_D:finish_task_by_rechage(player)
     result.playerProp.playerId = player:get_id()
     result.playerProp.source = "MSGS2CFinishNewTask"
     result.playerProp.dropProps = props
-    result.playerProp.dropSeniorProps = seniorProps
+    result.playerProp.dropSeniorProps = senior_props
     player:brocast_packet("MSGS2CFinishNewTask", result)
 end
 
@@ -238,24 +222,7 @@ function TASK_D:get_task_reward(player)
     player:next_task_data()
 
     ---! 发放任务奖励
-    local props = {}
-    local senior_props = {}
-    for prop_id, prop_count in pairs(config.reward) do repeat
-        local item_config = ITEM_CONFIG:get_config_by_id(prop_id)
-        if not item_config then
-            break
-        end
-
-        if not item_config.if_senior then
-            player:change_prop_count(prop_id, prop_count, PropRecieveType.kPropChangeTypeNewTaskReward)
-            props[#props + 1] = { propId = prop_id, propCount = prop_count, }
-            break
-        end
-
-        for idx = 1, prop_count do
-            senior_props[#senior_props + 1] = player:add_senior_prop_quick(prop_id)
-        end
-    until true end
+    local props, senior_props = ITEM_D:give_user_props(player, config.reward, PropChangeType.kPropChangeTypeNewTaskReward)
 
     ---! 广播消息
     local result = {}

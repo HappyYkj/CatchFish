@@ -61,8 +61,8 @@ function M:get_visable_callfishes()
             local fish = {}
             fish.playerId = callfish.playerId
             fish.fishTypeId = callfish.fishId
-			fish.frameId = callfish.frameId
-			fish.callFishId = callfish.callFishId
+            fish.frameId = callfish.frameId
+            fish.callFishId = callfish.callFishId
             fish.pathId = callfish.pathId
             fishes[#fishes + 1] = fish
         end

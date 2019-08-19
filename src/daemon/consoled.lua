@@ -1,5 +1,4 @@
 local uuid = require "global.common.uuid"
-local dump = require "global.common.dump"
 
 local host, port = "127.0.0.1", 5267
 
@@ -12,7 +11,14 @@ local mqueue = SERVICE_D:queue()
 
 -------------------------------------------------------------------------------
 ---! 内部方法
--------------------------------------------------------------------------------
+local function split_cmdline(cmdline)
+    local split = {}
+    for i in string.gmatch(cmdline, "%S+") do
+        table.insert(split,i)
+    end
+    return split
+end
+
 local function console(linda)
     local socket = require "socket"
     local client = socket.connect(host, port)
@@ -97,26 +103,43 @@ SERVICE_D:register("console_channel", function(data)
     local write = function (...) end
     if data then
         if string.byte(data, 1) == 39 then
-            write = function (...)
-                mqueue:send(id, ...)
+            write = function (data)
+                mqueue:send(id, tostring(data))
             end
 
             data = string.sub(data, 2)
         end
 
         if #data > 0 then
-            local elem = global[data]
-            if elem then
-                if type(elem) == "function" then
-                    pcall(elem)
+            local split = split_cmdline(data)
+            if #split == 1 then
+                local elem = global[split[1]]
+                if elem then
+                    if type(elem) ~= "function" then
+                        write(elem)
+                    else
+                        local wrap = load('return ' .. elem)
+                        local ok, ret = pcall(wrap)
+                        if ok and ret then
+                            write(ret)
+                        end
+                    end
                 else
-                    write(dump(elem))
+                    local wrap = load('return ' .. split[1])
+                    local ok, ret = pcall(wrap)
+                    if ok and ret then
+                        write(ret)
+                    end
                 end
             else
-                local wrap = load('return ' .. data)
+                local wrap = load(data)
                 local ok, ret = pcall(wrap)
-                if ok and ret then
-                    write(dump(ret))
+                if ok then
+                    local wrap = load('return ' .. split[1])
+                    local ok, ret = pcall(wrap)
+                    if ok and ret then
+                        write(ret)
+                    end
                 end
             end
         end

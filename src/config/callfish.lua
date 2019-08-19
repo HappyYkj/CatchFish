@@ -56,7 +56,7 @@ end
 -------------------------------------------------------------------------------
 CALLFISH_CONFIG = {}
 
-function CALLFISH_CONFIG:get_callfish_id(grade)
+function CALLFISH_CONFIG:get_fish_id(grade)
     if grade >= callfish_min_vip_grade then
         return weightedchoice(callfish_vip_ids) + 100000000
     end

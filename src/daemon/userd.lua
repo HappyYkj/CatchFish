@@ -182,7 +182,7 @@ function USER_D:init_user(user_ob)
     user_ob:set_history_icon_drop_rate(FISH_SERVER_CONFIG.initHistoryIconDropValue)
 
     ---! 设置初始道具
-    user_ob:init_item()
+    user_ob:init_user_props()
 
     ---! 设置新手任务
     user_ob:init_newbie_task()
@@ -307,24 +307,7 @@ function USER_D:check_player_upgrade(player, fishicon, gunrate)
     until true end
 
     ---! 发放升级奖励
-    local props = {}
-    local senior_props = {}
-    for prop_id, prop_count in pairs(rewards) do repeat
-        local item_config = ITEM_CONFIG:get_config_by_id(prop_id)
-        if not item_config then
-            break
-        end
-
-        if not item_config.if_senior then
-            player:change_prop_count(prop_id, prop_count, PropRecieveType.kPropChangeTypeUpgrade)
-            props[#props + 1] = { propId = prop_id, propCount = prop_count, }
-            break
-        end
-
-        for idx = 1, prop_count do
-            senior_props[#senior_props + 1] = player:add_senior_prop_quick(prop_id)
-        end
-    until true end
+    local props, senior_props = ITEM_D:give_user_props(player, rewards, PropChangeType.kPropChangeTypeUpgrade)
 
     ---! 广播升级消息
     local result = {}

@@ -128,24 +128,7 @@ function SHARE_D:process_share(player, share_type, share_args)
     player:add_share_count(share_type)
 
     ---! 发放分享奖励
-    local props = {}
-    local senior_props = {}
-    for prop_id, prop_count in pairs(rewards) do repeat
-        local item_config = ITEM_CONFIG:get_config_by_id(prop_id)
-        if not item_config then
-            break
-        end
-
-        if not item_config.if_senior then
-            player:change_prop_count(prop_id, prop_count, PropRecieveType.kPropChangeCommonShare)
-            props[#props + 1] = { propId = prop_id, propCount = prop_count, }
-            break
-        end
-
-        for idx = 1, prop_count do
-            senior_props[#senior_props + 1] = player:add_senior_prop_quick(prop_id)
-        end
-    until true end
+    local props, senior_props = ITEM_D:give_user_props(player, rewards, PropChangeType.kPropChangeTypeShare)
 
     local result = {}
     result.errorCode = 0

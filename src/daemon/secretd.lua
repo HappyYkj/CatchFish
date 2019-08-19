@@ -117,10 +117,15 @@ commands[309] = function (player, para)
 end
 
 local function modify_prop_count(player, prop_id, prop_count)
+    local item_config = ITEM_CONFIG:get_config_by_id(prop_id)
+    if not item_config then
+        return
+    end
+
     local cost_props = {}
     local drop_props = {}
     local senior_props = {}
-    if ITEM_CONFIG:is_senior_prop(prop_id) then
+    if item_config.if_senior ~= 0 then
         senior_props[#senior_props + 1] = player:add_senior_prop_quick(prop_id)
     else
         local diff_prop_count = prop_count - player:get_prop_count(prop_id)
@@ -128,7 +133,7 @@ local function modify_prop_count(player, prop_id, prop_count)
             return
         end
 
-        player:change_prop_count(prop_id, diff_prop_count, PropRecieveType.kPropChangeTypeSecret)
+        player:change_prop_count(prop_id, diff_prop_count, PropChangeType.kPropChangeTypeSecret)
 
         if prop_count > 0 then
             drop_props[#drop_props + 1] = { propId = prop_id, propCount = diff_prop_count, }

@@ -23,7 +23,7 @@ local sleep_func = function(id, secs)
     sleep(secs)
     linda:send("coroutine_resume", table.pack(id))
 end
-local sleep_lane = lanes.gen("string,table", { globals =  { sleep = lanes.sleep } }, sleep_func)
+local sleep_lane = lanes.gen("string,table", { globals = { sleep = lanes.sleep } }, sleep_func)
 
 -------------------------------------------------------------------------------
 ---! 对外接口
@@ -37,7 +37,7 @@ function SERVICE_D:start()
             break
         end
 
-        spdlog.warn("service", string.format("linda recvive name = %s undefined, data = %s", name, data))
+        spdlog.warn("service", string.format("linda recvive name = %s undefined, data = %s", data))
     until true end
 end
 
@@ -63,14 +63,12 @@ function SERVICE_D:dispatch(name, data)
     return true
 end
 
-function SERVICE_D:create(func, ...)
-    local opt = select(1, ...)
-    local thread
-    if type(opt) == "table" then
-        thread = lanes.gen("*", opt, func)
-    else
-        thread = lanes.gen("*", func)
-    end
+function SERVICE_D:create(func)
+    local globals = {}
+    globals.dump = dump
+    globals.sleep = lanes.sleep
+
+    local thread = lanes.gen("*", { globals = globals }, func)
     table.insert(lanes_threads, thread)
     thread(linda)
 end

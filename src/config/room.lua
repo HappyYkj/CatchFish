@@ -8,6 +8,7 @@ for key, row in pairs(tbl) do
     local config = {}
     config.id = row.id - 910000000              -- 索引, 房间类型Id
     config.name = row.name                      -- 房间名称
+    config.type = row.type                      -- 房间类型
     config.roomname = row.roomname              -- 房间详情
     config.cannon_max = row.cannon_max          -- 房间最大炮倍限制
     config.cannon_min = row.cannon_min          -- 房间最小炮倍限制
@@ -98,7 +99,7 @@ function ROOM_CONFIG:is_gunrate_validate(config, gunrate)
     if type(config) ~= "table" then
         return false
     end
-    
+
     if config.cannon_max > 0 and gunrate >= config.cannon_max then
         return false
     end

@@ -129,8 +129,7 @@ function MAIL_D:update_mail(player, id, op)
 
         -- 发放邮件奖励
         if mail.attach and #mail.attach > 0 then
-            local props = {}
-            local senior_props = {}
+            local prop_map = {}
             for _, prop_desc in ipairs(split(mail.attach, ";")) do repeat
                 local fields = split(prop_desc, ",")
                 if #fields < 2 then
@@ -142,28 +141,15 @@ function MAIL_D:update_mail(player, id, op)
                     break
                 end
 
-                prop_id, prop_count = tonumber(prop_id), tonumber(prop_count)
-                local item_config = ITEM_CONFIG:get_config_by_id(prop_id)
-                if not item_config then
-                    break
-                end
-
-                if not item_config.if_senior then
-                    player:change_prop_count(prop_id, prop_count, PropRecieveType.kPropChangeTypeMail)
-                    props[#props + 1] = { propId = prop_id, propCount = prop_count, }
-                    break
-                end
-
-                for idx = 1, prop_count do
-                    senior_props[#senior_props + 1] = player:add_senior_prop_quick(prop_id)
-                end
-            until true end
+                prop_map[tonumber(prop_id)] = tonumber(prop_count)
+            until tru end
+            local props, senior_props = ITEM_D:give_user_props(player, prop_map, PropChangeType.kPropChangeTypeMail)
 
             ---! 通知给奖励信息
             local result = {}
             result.playerId = player:get_id()
             result.dropProps = props
-            result.dropSeniorProps = seniorProps
+            result.dropSeniorProps = senior_props
             result.source = "MSGS2CMailUpdate"
             player:brocast_packet("MSGS2CUpdatePlayerProp", result)
         end

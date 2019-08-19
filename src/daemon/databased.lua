@@ -1,7 +1,7 @@
 local msg_dipatcher = {
-    ["read_common_content"]  = require "data.read_common_content",
+    ["read_common_content"] = require "data.read_common_content",
     ["write_common_content"] = require "data.write_common_content",
-    ["read_mail_content"]  = require "data.read_mail_content",
+    ["read_mail_content"] = require "data.read_mail_content",
     ["write_mail_content"] = require "data.write_mail_content",
     ["update_mail_content"] = require "data.update_mail_content",
     ["write_charge_content"] = require "data.write_charge_content",
@@ -9,52 +9,27 @@ local msg_dipatcher = {
     ["read_charge_content"] = require "data.read_charge_content",
 }
 
-local env, conn
-local function ensure_mysql()
-    if env then
-        if conn then
-            -- 返回数据库连接
-            return conn
-        end
-
-        -- 关闭数据库环境
-        env:close()
-    end
-
-    -- 创建环境对象
-    local luasql = require "luasql.mysql"
-    env = luasql.mysql()
-
-    -- 连接数据库
-    local config = require "config"
-    local datasource = config.mysql.data
-    local username = config.mysql.user
-    local password = config.mysql.auth
-    local host = config.mysql.host
-    local port = config.mysql.port
-    conn = env:connect(datasource, username, password, host, port)
-
-    -- 设置数据库的编码格式
-    conn:execute"SET NAMES UTF8"
-
-    -- 返回数据库连接
-    return conn
-end
-
-local function verify_mysql()
-    if not conn then
-        return
-    end
-
-    local reply = conn:ping()
-    if not reply then
-        -- 关闭数据库连接
-        conn:close()
-        conn = nil
-    end
-end
+local config = require "config"
+local datasource = config.mysql.data
+local username = config.mysql.user
+local password = config.mysql.auth
+local host = config.mysql.host
+local port = config.mysql.port
 
 local function processor(linda)
+    local mysql = require "global.db.mysql"
+
+    while true do
+        local ok, failmsg = mysql.create(datasource, username, password, host, port)
+        if ok then
+            break
+        end
+
+        print("luasql_failmsg : " .. failmsg)
+        sleep(3)
+    end
+
+    -- print(string.format("data_comm %s create succ.", decoda_name))
     while true do repeat
         local key, rpc = linda:receive("database_yield")
         if key ~= "database_yield" then
@@ -76,23 +51,16 @@ local function processor(linda)
             break
         end
 
-        local ok, result
-        for idx = 1, 10 do
-            local client = ensure_mysql()
-            if client then
-                ok, result = pcall(func, client, msg)
-                if ok then
-                    linda:send("coroutine_resume", table.pack(id, ok, result))
-                    break
-                end
-            end
-
-            verify_mysql()
-        end
+        local ok, result = mysql.execute(func, msg)
+        linda:send("coroutine_resume", table.pack(id, ok, result))
     until true end
 end
 
 -------------------------------------------------------------------------------
----! 对外接口
+---! 启动接口
 -------------------------------------------------------------------------------
-SERVICE_D:create(processor)
+register_post_init(function()
+    for idx = 1, 4 do
+        SERVICE_D:create(processor)
+    end
+end)

@@ -5,6 +5,7 @@ require "const"
 require "global.core.preload"
 require "global.core.lfstool"
 require "global.common.init"
+require "global.common.dump"
 require "global.common.utils"
 require "global.common.class"
 require "global.daemon.serviced"
@@ -23,6 +24,7 @@ load_all("daemon")
 load_all("config")
 load_all("channel")
 load_all("cmd")
+load_all("log")
 local cost = os.clock() - secs
 printf("Load all files OK. cost total secs = %s", cost)
 

@@ -489,7 +489,7 @@ function LIMIT_ARENA_D:signup(player, arena_type, signup_type)
         ---! 通过默认的方式报名
         for prop_id, prop_count in pairs(match_config.cost) do
             ---! 扣除费用
-            player:change_prop_count(prop_id, -prop_count, PropRecieveType.kPropChangePayFreetime)
+            player:change_prop_count(prop_id, -prop_count, PropChangeType.kPropChangePayFreetime)
 
             ---! 消费记录
             cost_props[#cost_props + 1] = { propId = prop_id, propCount = prop_count, }

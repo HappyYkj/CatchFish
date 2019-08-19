@@ -5,7 +5,7 @@ VIOLENT_D = {}
 
 ---! 初始狂暴状态
 function VIOLENT_D:init_violent(player)
-    local config = SKILL_CONFIG:get_config_by_itemid(GamePropIds.kGamePropViolent)
+    local config = SKILL_CONFIG:get_config_by_itemid(GamePropIds.kGamePropIdsViolent)
     if not config then
         return
     end
@@ -92,7 +92,7 @@ end
 
 ---! 开启狂暴状态
 function VIOLENT_D:start_violent(player, use_type)
-    local item_config = ITEM_CONFIG:get_config_by_id(GamePropIds.kGamePropViolent)
+    local item_config = ITEM_CONFIG:get_config_by_id(GamePropIds.kGamePropIdsViolent)
     if not item_config then
         local result = {}
         result.isSuccess = false
@@ -104,7 +104,7 @@ function VIOLENT_D:start_violent(player, use_type)
     ---! 判断所需消耗是否满足条件
     if use_type == 0 then
         ---! 通过消耗道具的方式
-        if player:get_prop_count(GamePropIds.kGamePropViolent) < 1 then
+        if player:get_prop_count(GamePropIds.kGamePropIdsViolent) < 1 then
             local result = {}
             result.isSuccess = false
             result.useType = use_type
@@ -141,10 +141,10 @@ function VIOLENT_D:start_violent(player, use_type)
     ---! 扣除对应消耗
     if use_type == 0 then
         ---! 通过消耗道具的方式
-        player:change_prop_count(GamePropIds.kGamePropViolent, -1, PropRecieveType.kPropChangeTypeUseProp)
+        player:change_prop_count(GamePropIds.kGamePropIdsViolent, -1, PropChangeType.kPropChangeTypeUseProp)
     else
         ---! 通过消耗水晶的方式
-        player:change_prop_count(item_config.price_type, -item_config.price_value, PropRecieveType.kPropChangeTypeViolentWithCrystal)
+        player:change_prop_count(item_config.price_type, -item_config.price_value, PropChangeType.kPropChangeTypeViolentWithCrystal)
     end
 
     ---! 初始狂暴状态

@@ -25,29 +25,13 @@ local function main (userOb, msgData)
     userOb:send_packet("MSGS2CNotifyPlayerAttrs", result)
 
     ---! 给与奖励
-    local props = {}
-    local seniorProps = {}
-    for propId, propCount in pairs(vip_config.vipGift) do repeat
-        local item_config = ITEM_CONFIG:get_config_by_id(propId)
-        if not item_config then
-            break
-        end
-        
-        if not item_config.if_senior then
-            userOb:change_prop_count(propId, propCount, PropRecieveType.kPropChagneTypeGetVipGift)
-            props[#props + 1] = { propId = propId, propCount = propCount, }
-        else
-            for idx = 1, propCount do 
-                seniorProps[#seniorProps + 1] = userOb:add_senior_prop_quick(propId)
-            end
-        end
-    until true end
+    local props, senior_props = ITEM_D:give_user_props(userOb, vip_config.vipGift, PropChangeType.kPropChagneTypeGetVipGift)
 
     ---! 通知给奖励信息
     local result = {}
     result.playerId = userOb:get_id()
     result.dropProps = props
-    result.dropSeniorProps = seniorProps
+    result.dropSeniorProps = senior_props
     result.source = "MSGC2SRequestGetVipGift"
     userOb:brocast_packet("MSGS2CUpdatePlayerProp", result)
 end

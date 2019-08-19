@@ -22,8 +22,8 @@ local function main (userOb, msgData)
 
     if config.crystal_need > 0 then
         -- 扣除水晶
-        userOb:change_prop_count(GamePropIds.kGamePropIdsCrystal, -config.crystal_need, PropRecieveType.kPropChangeTypeUseCrystal)
-    
+        userOb:change_prop_count(GamePropIds.kGamePropIdsCrystal, -config.crystal_need, PropChangeType.kPropChangeTypeUseCrystal)
+
         -- 同步水晶
         ----todo：需要向客户端广播同步水晶数据
 

@@ -48,6 +48,7 @@ end
 
 function load_all (path)
     local root = lfs.currentdir()
+    local fullpath = root .. sep .. 'src' .. sep .. path
     for _, filepath in ipairs(attrdir(root .. sep .. 'src' .. sep .. path)) do
         local loadfile
         local ext = getextension(filepath)

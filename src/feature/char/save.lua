@@ -31,21 +31,7 @@ function M:load()
             return false
         end
 
-        ---! 道具基本数据
-        if item_dbase.props then
-            self:set_temp("item", "props", item_dbase.props)
-        end
-
-        if item_dbase.seniorProps then
-            local maxSeniorPropId = self:query_temp("maxSeniorPropId") or 0
-            local seniorProps = self:query_temp("item", "seniorProps") or {}
-            for _, seniorProp in ipairs(item_dbase.seniorProps) do
-                seniorProps[seniorProp.propItemId] = seniorProp
-                maxSeniorPropId = math.max(seniorProp.propItemId, maxSeniorPropId)
-            end
-            self:set_temp("maxSeniorPropId", maxSeniorPropId)
-            self:set_temp("item", "seniorProps", seniorProps)
-        end
+        ITEM_D:load_user_props(self, item_dbase)
     end
 
     ---! 加载成功
@@ -56,15 +42,8 @@ function M:save()
     local user_id = self:get_id()
 
     ---! 保存道具数据
-    local item_dbase = self:query_temp("item")
-    if item_dbase then
-        local item_map = {
-            props = table.values(item_dbase["props"]),
-            seniorProps = table.values(item_dbase["seniorProps"]),
-        }
-
-        FILE_D:write_common_content("item", user_id, "", json.encode(item_map))
-    end
+    local item_dbase = ITEM_D:save_user_props(self)
+    FILE_D:write_common_content("item", user_id, "", json.encode(item_dbase))
 
     ---! 保存基本数据
     local user_dbase = self:query_entire_dbase()

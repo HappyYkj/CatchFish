@@ -73,10 +73,10 @@ function AIM_D:start_aim(player, use_type, fishArrayId, timelineId)
 
     if use_type == 0 then
         -- 扣除道具
-        player:change_prop_count(GamePropIds.kGamePropIdsAim, -1, PropRecieveType.kPropChangeTypeUseProp)
+        player:change_prop_count(GamePropIds.kGamePropIdsAim, -1, PropChangeType.kPropChangeTypeUseProp)
     else
         -- 扣除水晶
-        player:change_prop_count(GamePropIds.kGamePropIdsCrystal, -item_config.price_value, PropRecieveType.kPropChangeTypeFreezeWithCrystal)
+        player:change_prop_count(GamePropIds.kGamePropIdsCrystal, -item_config.price_value, PropChangeType.kPropChangeTypeAimWithCrystal)
     end
 
     ---! 获取瞄准加成

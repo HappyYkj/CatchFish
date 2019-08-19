@@ -188,7 +188,7 @@ function ALM_D:apply_alm(player)
     ---! 增加当前救济金获取的鱼币
     local alm_fishicon = get_alm_fishicon(alm_config, player:get_max_gunrate(), today_count)
     if alm_fishicon > 0 then
-        player:change_prop_count(GamePropIds.kGamePropIdsFishIcon, alm_fishicon, PropRecieveType.kPropChangeTypeAlm)
+        player:change_prop_count(GamePropIds.kGamePropIdsFishIcon, alm_fishicon, PropChangeType.kPropChangeTypeAlm)
     end
 
     ---! 广播消息

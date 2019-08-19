@@ -114,7 +114,7 @@ function CANNON_D:upgrade_gunrate(player, gunrate)
 
     ---! 消耗物品
     for _, cost_prop in ipairs(cost_props) do
-        player:change_prop_count(cost_prop.propId, -cost_prop.propCount, PropRecieveType.kPropChangeTypeUpgradeCannonCost)
+        player:change_prop_count(cost_prop.propId, -cost_prop.propCount, PropChangeType.kPropChangeTypeUpgradeCannonCost)
     end
 
     ---! 修改炮倍
@@ -122,7 +122,7 @@ function CANNON_D:upgrade_gunrate(player, gunrate)
 
     ---! 给与奖励
     for _, drop_prop in pairs(drop_props) do
-        player:change_prop_count(drop_prop.propId, drop_prop.propCount, PropRecieveType.kPropChangeTypeUpgradeCannonDrop)
+        player:change_prop_count(drop_prop.propId, drop_prop.propCount, PropChangeType.kPropChangeTypeUpgradeCannonDrop)
     end
 
     ---! 升级成功
@@ -159,7 +159,7 @@ function CANNON_D:upgrade_gunrate_free(player, gunrate)
 
     ---! 给与奖励
     for _, drop_prop in pairs(drop_props) do
-        player:change_prop_count(drop_prop.propId, drop_prop.propCount, PropRecieveType.kPropChangeTypeUpgradeCannonDrop)
+        player:change_prop_count(drop_prop.propId, drop_prop.propCount, PropChangeType.kPropChangeTypeUpgradeCannonDrop)
     end
 
     ---! 更新升级炮倍任务
@@ -249,7 +249,7 @@ function CANNON_D:forge_cannon(player, use_crystal_power)
     end
 
     ---! 判断结晶能量是否充足
-    if use_crystal_power and player:get_prop_count(GamePropIds.kGamePropCrystalEnerge) < cannon_config.succ_need then
+    if use_crystal_power and player:get_prop_count(GamePropIds.kGamePropIdsCrystalEnerge) < cannon_config.succ_need then
         local result = {}
         result.isSuccess = false
         result.playerId = player:get_id()
@@ -274,12 +274,12 @@ function CANNON_D:forge_cannon(player, use_crystal_power)
 
     ---! 需要消耗的结晶能量
     if use_crystal_power then
-        cost_props[#cost_props + 1] = { propId = GamePropIds.kGamePropCrystalEnerge, propCount = cannon_config.succ_need, }
+        cost_props[#cost_props + 1] = { propId = GamePropIds.kGamePropIdsCrystalEnerge, propCount = cannon_config.succ_need, }
     end
 
     ---! 扣除所需消耗的材料
     for _, cost_prop in ipairs(cost_props) do
-        player:change_prop_count(cost_prop.propId, -cost_prop.propCount, PropRecieveType.kPropChangeTypeForgeCost)
+        player:change_prop_count(cost_prop.propId, -cost_prop.propCount, PropChangeType.kPropChangeTypeForgeCost)
     end
 
     ---! 按照配置的概率，随机锻造结果
@@ -293,19 +293,19 @@ function CANNON_D:forge_cannon(player, use_crystal_power)
         ---! 计算掉落结晶能量的数量
         local enengy_crystal_count = FISH_SERVER_CONFIG:get_enengy_crystal_count(times)
         if enengy_crystal_count > 0 then
-            drop_props[#drop_props + 1] = { propId = GamePropIds.kGamePropCrystalEnerge, propCount = enengy_crystal_count, }
+            drop_props[#drop_props + 1] = { propId = GamePropIds.kGamePropIdsCrystalEnerge, propCount = enengy_crystal_count, }
         end
 
         ---! 给与所有掉落的道具
         for _, drop_prop in ipairs(drop_props) do
-            player:change_prop_count(drop_prop.propId, drop_prop.propCount, PropRecieveType.kPropChangeTypeForgeDrop)
+            player:change_prop_count(drop_prop.propId, drop_prop.propCount, PropChangeType.kPropChangeTypeForgeDrop)
         end
 
         ---! 锻造失败
         local result = {}
         result.isSuccess = false
         result.playerId = player:get_id()
-        result.newCrystalPower = player:get_prop_count(GamePropIds.kGamePropCrystalEnerge)
+        result.newCrystalPower = player:get_prop_count(GamePropIds.kGamePropIdsCrystalEnerge)
         result.crystal = player:get_prop_count(GamePropIds.kGamePropIdsCrystal)
         result.errorCode = ForgeResult.kForgeResultFailed
         player:send_packet("MSGS2CForge", result)
@@ -327,19 +327,19 @@ function CANNON_D:forge_cannon(player, use_crystal_power)
 
     ---! 解锁奖励道具
     for propId, propCount in pairs(cannon_config.phaseReward) do
-        drop_props[#drop_props + 1] = { propId = GamePropIds.kGamePropCrystalEnerge, propCount = enengy_crystal_count, }
+        drop_props[#drop_props + 1] = { propId = GamePropIds.kGamePropIdsCrystalEnerge, propCount = enengy_crystal_count, }
     end
 
     ---! 给与奖励道具
     for _, drop_prop in ipairs(drop_props) do
-        player:change_prop_count(drop_prop.propId, drop_prop.propCount, PropRecieveType.kPropChangeTypeForgeDrop)
+        player:change_prop_count(drop_prop.propId, drop_prop.propCount, PropChangeType.kPropChangeTypeForgeDrop)
     end
 
     ---! 锻造成功
     local result = {}
     result.isSuccess = true
     result.playerId = player:get_id()
-    result.newCrystalPower = player:get_prop_count(GamePropIds.kGamePropCrystalEnerge)
+    result.newCrystalPower = player:get_prop_count(GamePropIds.kGamePropIdsCrystalEnerge)
     result.crystal = player:get_prop_count(GamePropIds.kGamePropIdsCrystal)
     result.errorCode = ForgeResult.kForgeResultSuccess
     result.newGunRate = next_gunrate
@@ -389,7 +389,7 @@ function CANNON_D:forge_seperate_cannon(player)
 
     ---! 扣除道具
     for propId, propCount in pairs(forge_cannon.props) do
-        player:change_prop_count(propId, propCount, PropRecieveType.kPropChangeSeperateGunForge)
+        player:change_prop_count(propId, propCount, PropChangeType.kPropChangeSeperateGunForge)
     end
 
     ---! 累加锻造次数
@@ -463,7 +463,7 @@ function CANNON_D:use_cannon(player, prop_id, use_type)
         end
 
         ---! 扣除消耗
-        player:change_prop_count(item_config.price_type, - item_config.price_value, PropRecieveType.kPropChangeTypeCannonUse)
+        player:change_prop_count(item_config.price_type, - item_config.price_value, PropChangeType.kPropChangeTypeCannonUse)
 
         ---! 给与道具
         senior_prop = player:add_senior_prop_quick(prop_id)
@@ -484,7 +484,7 @@ function CANNON_D:decompose_cannon(player, prop_id)
     if not item_config then
         local result = {}
         result.isSuccess = false
-        result.newCrystalPower = player:get_prop_count(GamePropIds.kGamePropCrystalEnerge)
+        result.newCrystalPower = player:get_prop_count(GamePropIds.kGamePropIdsCrystalEnerge)
         player:send_packet("MSGS2CDecompose", result)
         return
     end
@@ -492,7 +492,7 @@ function CANNON_D:decompose_cannon(player, prop_id)
     if prop_id < GamePropIds.kGamePropIdsFrameCrystal or prop_id > GamePropIds.kGamePropIdsEarthCrystal then
         local result = {}
         result.isSuccess = false
-        result.newCrystalPower = player:get_prop_count(GamePropIds.kGamePropCrystalEnerge)
+        result.newCrystalPower = player:get_prop_count(GamePropIds.kGamePropIdsCrystalEnerge)
         player:send_packet("MSGS2CDecompose", result)
         return
     end
@@ -500,7 +500,7 @@ function CANNON_D:decompose_cannon(player, prop_id)
     if player:get_prop_count(prop_id) < FISH_SERVER_CONFIG.decomposeCrystalRequire then
         local result = {}
         result.isSuccess = false
-        result.newCrystalPower = player:get_prop_count(GamePropIds.kGamePropCrystalEnerge)
+        result.newCrystalPower = player:get_prop_count(GamePropIds.kGamePropIdsCrystalEnerge)
         player:send_packet("MSGS2CDecompose", result)
         return
     end
@@ -509,21 +509,21 @@ function CANNON_D:decompose_cannon(player, prop_id)
     if enengy_crystal_count <= 0 then
         local result = {}
         result.isSuccess = false
-        result.newCrystalPower = player:get_prop_count(GamePropIds.kGamePropCrystalEnerge)
+        result.newCrystalPower = player:get_prop_count(GamePropIds.kGamePropIdsCrystalEnerge)
         player:send_packet("MSGS2CDecompose", result)
         return
     end
 
     ---! 扣除目标道具
-    player:change_prop_count(prop_id, -FISH_SERVER_CONFIG.decomposeCrystalRequire, PropRecieveType.kPropChangeTypeDecomposeCost)
+    player:change_prop_count(prop_id, -FISH_SERVER_CONFIG.decomposeCrystalRequire, PropChangeType.kPropChangeTypeDecomposeCost)
 
     ---! 给与分解材料
-    player:change_prop_count(GamePropIds.kGamePropCrystalEnerge, enengy_crystal_count, PropRecieveType.kPropChangeTypeDecomposeDrop)
+    player:change_prop_count(GamePropIds.kGamePropIdsCrystalEnerge, enengy_crystal_count, PropChangeType.kPropChangeTypeDecomposeDrop)
 
     ---! 分解成功
     local result = {}
     result.isSuccess = true
-    result.newCrystalPower = player:get_prop_count(GamePropIds.kGamePropCrystalEnerge)
+    result.newCrystalPower = player:get_prop_count(GamePropIds.kGamePropIdsCrystalEnerge)
     player:send_packet("MSGS2CDecompose", result)
 end
 

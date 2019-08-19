@@ -86,31 +86,14 @@ function CHARGE_D:process_incomplete_order(order)
         until true end
 
         ---! 获得奖励
-        local props = {}
-        local seniorProps = {}
-        for prop_id, prop_count in pairs(rewards) do repeat
-            local item_config = ITEM_CONFIG:get_config_by_id(prop_id)
-            if not item_config then
-                break
-            end
-
-            if not item_config.if_senior then
-                user:change_prop_count(prop_id, prop_count, PropRecieveType.kPropChagneTypeGetVipGift)
-                props[#props + 1] = { propId = prop_id, propCount = prop_count, }
-                break
-            end
-
-            for idx = 1, prop_count do
-                seniorProps[#seniorProps + 1] = user:add_senior_prop_quick(prop_id)
-            end
-        until true end
+        local props, senior_props = ITEM_D:give_user_props(user, rewards, PropChangeType.kPropChangeTypeCharge)
 
         -- 通知给奖励信息
         local result = {}
         result.playerId = user:get_id()
         result.source = "MSGS2CChargeGoodes"
         result.dropProps = props
-        result.dropSeniorProps = seniorProps
+        result.dropSeniorProps = senior_props
         user:brocast_packet("MSGS2CChargeGoodes", result)
     until true
 
