@@ -1,4 +1,4 @@
-local json = require "json"
+local json = require "cjson"
 
 local function main(conn, msg)
     local id, status = msg['id'], msg['status']

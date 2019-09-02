@@ -29,5 +29,7 @@ local cost = os.clock() - secs
 printf("Load all files OK. cost total secs = %s", cost)
 
 post_init()
-SERVICE_D:start()
+SERVICE_D:mainloop()
 post_dest()
+
+SERVICE_D:exit()

@@ -1,6 +1,6 @@
-local json = require "json"
+local json = require "cjson"
 
-SERVICE_D:register("login_channel", function (data)
+SERVICE_D:register("login_channel", function (linda, data)
     local recv = json.decode(data)
     if not recv then
         spdlog.warn("login_channel", string.format("parse error, data : %s", data));

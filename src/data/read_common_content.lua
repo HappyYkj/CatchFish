@@ -1,4 +1,4 @@
-local json = require "json"
+local json = require "cjson"
 
 local table_names = {
     user = "user_data",
@@ -13,7 +13,7 @@ local function main(conn, msg)
     local cur = conn:execute(cmd)
     local row = cur:fetch({}, "a")
     cur:close()
-    
+
     local content = row and row.context or ""
     return content
 end

@@ -1,6 +1,6 @@
-local error_func = function(err)
-    spdlog.error(err)
-    spdlog.error(debug.traceback())
+function error_traceback(err)
+    print(err)
+    print(debug.traceback())
 end
 
 -------------------------------------------------------------------------------
@@ -14,8 +14,13 @@ function register_post_init(func, ...)
 end
 
 function post_init()
-    for _, func in ipairs(post_init_funcs) do
-        xpcall(func, error_func)
+    local _post_init_funcs, post_init_funcs = post_init_funcs, {}
+    for _, func in ipairs(_post_init_funcs) do
+        xpcall(func, error_traceback)
+    end
+
+    if #post_init_funcs > 0 then
+        post_init()
     end
 end
 
@@ -24,13 +29,18 @@ end
 -------------------------------------------------------------------------------
 local post_dest_funcs = {}
 
-function register_post_desk(func, ...)
+function register_post_dest(func, ...)
     local para = table.pack(...)
     post_dest_funcs[#post_dest_funcs + 1] = function() func(table.unpack(para)) end
 end
 
 function post_dest()
-    for _, func in ipairs(post_dest_funcs) do
-        xpcall(func, error_func)
+    local _post_dest_funcs, post_dest_funcs = post_dest_funcs, {}
+    for _, func in ipairs(_post_dest_funcs) do
+        xpcall(func, error_traceback)
+    end
+
+    if #post_dest_funcs > 0 then
+        post_dest()
     end
 end

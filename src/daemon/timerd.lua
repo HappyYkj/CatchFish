@@ -1,17 +1,26 @@
 local lanes = require "lanes"
 
 -------------------------------------------------------------------------------
----! GENERATE ID TO HOLD TIMERS
--------------------------------------------------------------------------------
-local timer_id = 0
-
--------------------------------------------------------------------------------
 ---! CREATE TABLE TO HOLD TIMERS
 -------------------------------------------------------------------------------
-local timer_map = {}
+local linda = lanes.linda("timers")
+local mt = {
+    __index = function(_, key)
+        return linda:get(key)
+    end,
+    __newindex = function(_, key, val)
+        linda:set(key, val)
+    end,
+}
+local timer_map = setmetatable({}, mt)
 
 -------------------------------------------------------------------------------
----! 内部接口
+---! GENERATE ID TO HOLD TIMERS
+-------------------------------------------------------------------------------
+local timer_id, timer_func = 0, {}
+
+-------------------------------------------------------------------------------
+---! 内部方法
 -------------------------------------------------------------------------------
 local function now_secs()
     return lanes.now_secs()
@@ -21,14 +30,20 @@ local function sort_rule(timer1, timer2)
     return timer1.tigger < timer2.tigger
 end
 
-local function trace_func(err)
-    spdlog.error(err)
-    spdlog.error(debug.traceback())
+local function all_timers()
+    local timers = {}
+    for idx, _ in pairs(linda:dump() or {}) do
+        local timer = timer_map[idx]
+        if timer then
+            table.insert(timers, timer)
+        end
+    end
+    return timers
 end
 
-local function loop()
-    while true do
-        local timers = table.values(timer_map)
+local function loop(linda, channel)
+    while not cancel_test() do
+        local timers = all_timers()
         if #timers > 0 then
             ---! 获取当前时间
             local now = now_secs()
@@ -47,11 +62,11 @@ local function loop()
                     timer.times = timer.times - 1
                 end
 
-                -- 尝试执行回调
-                xpcall(timer.func, trace_func)
-
                 -- 获取定时器Id
                 local timer_id = timer.id
+
+                -- 尝试执行回调
+                linda:send(channel, table.pack(timer_id))
 
                 -- 更新定时器
                 if timer.times == 0 then
@@ -68,7 +83,14 @@ local function loop()
         end
 
         -- 休眠一秒
-        THREAD_D:sleep(1)
+        lanes.sleep(0.1)
+    end
+end
+
+local function shedule(linda, timer_id)
+    local func = timer_func[timer_id]
+    if type(func) == "function" then
+        return func()
     end
 end
 
@@ -97,12 +119,14 @@ function TIMER_D:start_timer(...)
     ---! 分配唯一id
     timer_id = timer_id + 1
 
+    ---! 记录回调方法
+    timer_func[timer_id] = func
+
     ---! 设置相关信息
     local timer = {}
     timer.id = timer_id
     timer.interval = sec
     timer.tigger = now_secs() + sec
-    timer.func = func
     timer.times = times
 
     ---! 记录定时器
@@ -114,6 +138,7 @@ end
 
 function TIMER_D:cancel_timer(_timer_id)
     timer_map[_timer_id] = nil
+    timer_func[_timer_id] = nil
 end
 
 function TIMER_D:get_timer(_timer_id)
@@ -121,8 +146,9 @@ function TIMER_D:get_timer(_timer_id)
 end
 
 -------------------------------------------------------------------------------
----! 启动接口
+---! 启动模块
 -------------------------------------------------------------------------------
 register_post_init(function()
-    THREAD_D:create(loop)
+    SERVICE_D:register("timer_sheduler", shedule)
+    SERVICE_D:create(loop, "timer_sheduler")
 end)

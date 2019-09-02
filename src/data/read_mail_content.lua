@@ -1,4 +1,4 @@
-local json = require "json"
+local json = require "cjson"
 
 local function rows(conn, cmd)
     local cur = conn:execute(cmd)
@@ -18,7 +18,7 @@ local function main(conn, msg)
     local deadline = os.time() - 15 * 86400
 
     local table = "mail_data"
-    local cmd    
+    local cmd
     if #id <= 0 then
         cmd = string.format("SELECT `id`, `type`, `title`, `content`, `attach`, `status`, UNIX_TIMESTAMP(`sendTime`) AS `sendTime` FROM `%s` WHERE playerId = '%s' AND status <> 3 AND sendTime > %s ORDER BY id DESC LIMIT %d",
                             table, playerId, deadline, count)

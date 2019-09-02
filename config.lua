@@ -45,7 +45,7 @@ if debug then
 }
 else
 dblog = {
-    data = "catchlog",
+    data = "catchfish",
     user = "root",
     auth = "weile2018",
     host = "39.96.52.103",

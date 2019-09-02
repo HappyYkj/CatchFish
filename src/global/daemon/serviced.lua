@@ -12,33 +12,50 @@ local linda = lanes.linda()
 local service_map = {}
 
 -------------------------------------------------------------------------------
----! CREATE TABLE TO HOLD LANES THREADS
+---! CREATE TABLE TO HOLD THREADS
 -------------------------------------------------------------------------------
-local lanes_threads = {}
-
--------------------------------------------------------------------------------
----! 内部方法
--------------------------------------------------------------------------------
-local sleep_func = function(id, secs)
-    sleep(secs)
-    linda:send("coroutine_resume", table.pack(id))
-end
-local sleep_lane = lanes.gen("string,table", { globals = { sleep = lanes.sleep } }, sleep_func)
+local threads = {}
 
 -------------------------------------------------------------------------------
 ---! 对外接口
 -------------------------------------------------------------------------------
 SERVICE_D = {}
 
-function SERVICE_D:start()
-    while true do repeat
-        local name, data = linda:receive(table.unpack(table.keys(service_map)))
+function SERVICE_D:mainloop(seconds_)
+    seconds_ = seconds_ or 3.0
+    while not has_been_stop() do repeat
+        local service_channels = table.keys(service_map)
+        if #service_channels <= 0 then
+            lanes.sleep(seconds_)
+            break
+        end
+
+        local name, data = linda:receive(seconds_, table.unpack(service_channels))
+        if not name then
+            break
+        end
+
+        spdlog.debug("service", string.format("linda recvive name = %s data = %s", name, data))
         if SERVICE_D:dispatch(name, data) then
             break
         end
 
-        spdlog.warn("service", string.format("linda recvive name = %s undefined, data = %s", data))
+        spdlog.warn("service", string.format("linda recvive name = %s undefined, data = %s", name, data))
     until true end
+end
+
+function SERVICE_D:exit(mode)
+    mode = mode or "soft"
+    for _, thread in ipairs(threads) do
+        thread:cancel("soft")
+    end
+
+    ---! Make sure all threads finished
+    for _, thread in ipairs(threads) do
+        thread:join()
+    end
+
+    threads = {}
 end
 
 function SERVICE_D:register(name, func)
@@ -52,7 +69,7 @@ function SERVICE_D:dispatch(name, data)
     end
 
     local wrap = function()
-        return func(data)
+        return func(linda, table.unpack(data))
     end
 
     if name ~= "coroutine_resume" then
@@ -63,24 +80,19 @@ function SERVICE_D:dispatch(name, data)
     return true
 end
 
-function SERVICE_D:create(func)
-    local globals = {}
-    globals.dump = dump
-    globals.sleep = lanes.sleep
+function SERVICE_D:create(func, ...)
+    local wrap = function(...)
+        require "global.common.init"
+        require "global.common.utils"
+        require "global.core.preload"
 
-    local thread = lanes.gen("*", { globals = globals }, func)
-    table.insert(lanes_threads, thread)
-    thread(linda)
-end
+        xpcall(func, error_traceback, ...)
+    end
 
-function SERVICE_D:sleep(id, secs)
-    return sleep_lane(id, secs)
+    local thread = lanes.gen("*", wrap)(linda, ...)
+    table.insert(threads, thread)
 end
 
 function SERVICE_D:post(channel, ...)
     return linda:send(channel, table.pack(...))
-end
-
-function SERVICE_D:queue(...)
-    return lanes.linda(...)
 end

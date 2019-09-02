@@ -1,4 +1,4 @@
-local json = require "json"
+local json = require "cjson"
 
 -------------------------------------------------------------------------------
 ---! 对外接口
@@ -77,7 +77,7 @@ function M:brocast_desk_packet(MsgType, MsgValue, exclude_player_ids)
     if not desk then
         return
     end
-    
+
     desk:brocast_packet(MsgType, MsgValue, exclude_player_ids)
 end
 

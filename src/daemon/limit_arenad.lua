@@ -346,7 +346,6 @@ local function finish_limit_arena_round()
 
         ---! 遍历排行信息
         for rank, rank_map in ipairs(limit_arena_map.match_rank_list) do repeat
-            print(rank, serialize(rank_map))
             local prop_id, prop_count = MATCH_CONFIG:get_reward_by_rank(match_config, rank)
             if not prop_id or not prop_count then
                 break

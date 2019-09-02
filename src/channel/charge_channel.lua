@@ -1,4 +1,4 @@
-SERVICE_D:register("charge_channel", function (data)
+SERVICE_D:register("charge_channel", function (linda, data)
     local recv = json.decode(data)
     local user_id = recv["userid"]
     local order_id = recv["order_id"]

@@ -16,22 +16,26 @@ local password = config.mysql.auth
 local host = config.mysql.host
 local port = config.mysql.port
 
-local function processor(linda)
+local function processor(linda, idx)
     local mysql = require "global.db.mysql"
 
     while true do
+        if cancel_test() then
+            return
+        end
+
         local ok, failmsg = mysql.create(datasource, username, password, host, port)
         if ok then
             break
         end
 
-        print("luasql_failmsg : " .. failmsg)
+        print("db luasql_failmsg : " .. failmsg)
         sleep(3)
     end
 
-    -- print(string.format("data_comm %s create succ.", decoda_name))
-    while true do repeat
-        local key, rpc = linda:receive("database_yield")
+    printf("database[%s:%s %s#%d] processor start ...", host, port, datasource, idx)
+    while not cancel_test() do repeat
+        local key, rpc = linda:receive(3.0, "database_yield")
         if key ~= "database_yield" then
             break
         end
@@ -54,13 +58,16 @@ local function processor(linda)
         local ok, result = mysql.execute(func, msg)
         linda:send("coroutine_resume", table.pack(id, ok, result))
     until true end
+
+    mysql.destory()
+    printf("database[%s:%s %s##%d] processor quit ...", host, port, datasource, idx)
 end
 
 -------------------------------------------------------------------------------
 ---! 启动接口
 -------------------------------------------------------------------------------
 register_post_init(function()
-    for idx = 1, 4 do
-        SERVICE_D:create(processor)
+    for idx = 1, 2 do
+        SERVICE_D:create(processor, idx)
     end
 end)

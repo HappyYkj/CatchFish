@@ -61,11 +61,13 @@ end
 
 local function log_senior_prop_changed(player, prop, offset, reason)
     LOG_D:write_item_log{
-        reason = reason,
         player_id = player:get_id(),
         prop_id = prop.propId,
         prop_count = player:get_senior_prop_count(prop_id),
         offset = offset,
+        reason = reason,
+        update_time = os.date("%Y-%m-%d %H:%M:%S"),
+        desk_grade = player:get_desk_grade(),
         memo = string.format("intProp1:%s,intProp2:%s,stringProp:%s", prop.intProp1, prop.intProp2, prop.stringProp)
     }
 end

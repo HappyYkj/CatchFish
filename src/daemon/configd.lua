@@ -1,4 +1,4 @@
-local json = require "json"
+local json = require "cjson"
 
 ---! 解析配置
 local config = {}

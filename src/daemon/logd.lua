@@ -14,22 +14,26 @@ local msg_dipatcher = lanes.linda("share_data")
 -------------------------------------------------------------------------------
 ---! 内部方法
 -------------------------------------------------------------------------------
-local function processor(linda)
+local function processor(linda, idx)
     local mysql = require "global.db.mysql"
 
     while true do
+        if cancel_test() then
+            return
+        end
+
         local ok, failmsg = mysql.create(datasource, username, password, host, port)
         if ok then
             break
         end
 
-        print("luasql_failmsg : " .. failmsg)
+        print("log luasql_failmsg : " .. failmsg)
         sleep(3)
     end
 
-    -- print(string.format("write_log %s create succ.", decoda_name))
-    while true do repeat
-        local key, val = linda:receive("write_log")
+    printf("logger[%s:%s %s#%d] processor start ...", host, port, datasource, idx)
+    while not cancel_test() do repeat
+        local key, val = linda:receive(3.0, "write_log")
         if key ~= "write_log" then
             break
         end
@@ -46,6 +50,9 @@ local function processor(linda)
 
         mysql.execute(func, log_data)
     until true end
+
+    mysql.destory()
+    printf("logger[%s:%s %s##%d] processor quit ...", host, port, datasource, idx)
 end
 
 -------------------------------------------------------------------------------
@@ -69,7 +76,7 @@ end
 ---! 启动接口
 -------------------------------------------------------------------------------
 register_post_init(function()
-    for idx = 1, 16 do
-        SERVICE_D:create(processor)
+    for idx = 1, 4 do
+        SERVICE_D:create(processor, idx)
     end
 end)
