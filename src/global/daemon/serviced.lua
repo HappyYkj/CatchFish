@@ -35,7 +35,7 @@ function SERVICE_D:mainloop(seconds_)
             break
         end
 
-        spdlog.debug("service", string.format("linda recvive name = %s data = %s", name, data))
+        -- spdlog.debug("service", string.format("linda recvive name = %s data = %s", name, data))
         if SERVICE_D:dispatch(name, data) then
             break
         end
