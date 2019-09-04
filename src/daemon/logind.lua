@@ -95,9 +95,6 @@ function LOGIN_D:login(loginTime, clientAddr, clientId, loginInfo)
         result.attrs = { { attrKey = 4, attrValue = user_ob:get_gift_sign(), } }
         user_ob:send_packet("MSGS2CNotifyPlayerAttrs", result)
 
-        ---! 在线奖励领取
-        ONLINE_REWARD_D:update_online_reward_data(user_ob)
-
         ---! 每日分享
         local result = {}
         result.errorCode = 0

@@ -51,6 +51,10 @@ function ONLINE_REWARD_D:update_online_reward_data(player)
         player:set("onlineReward", "rewardPropId", prop_id)
         player:set("onlineReward", "rewardPropCount", prop_count)
     end
+
+    if not player:query_temp("clientId") then
+        player:delete("onlineReward", "updateTime")
+    end
 end
 
 ---! 清理在线奖励数据

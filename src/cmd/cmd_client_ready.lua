@@ -63,12 +63,7 @@ local function main (userOb, msgData)
         FISH_DRAW_D:send_fish_reward(userOb)
 
         ---! 刷新在线奖励
-        ONLINE_REWARD_D:update_online_reward_data(userOb)
-        local result = {}
-        result.onlineTime = userOb:get_online_time()
-        result.needTime = userOb:get_need_time()
-        result.isLastOne = (userOb:get_reward_count() + 1 >= ONLINE_REWARD_CONFIG:get_reward_max_times()) and 1 or 0
-        userOb:send_packet("MSGS2CNotifyOnlineRewardDatas", result)
+        ONLINE_REWARD_D:send_online_reward_data(userOb)
     end
 end
 
