@@ -412,7 +412,7 @@ function FREE_ARENA_D:signup(player, arena_type, signup_type)
     FREE_ARENA_D:send_signup_info(player, arena_type)
 
     ---! 尝试开启比赛
-    if table.len(signup_group) >= match_config.num then
+    if table.size(signup_group) >= match_config.num then
         start_free_arena(signup_group, arena_type)
     end
 end
@@ -591,7 +591,7 @@ function FREE_ARENA_D:shoot_bullet(player, data)
 
     ---! 判断子弹数量
     local bullets = desk:get_player_bullets(playerId)
-    if table.len(bullets) >= room_config.max_bullet then
+    if table.size(bullets) >= room_config.max_bullet then
         local result = {}
         result.validate = false
         result.bulletId = data.bulletId

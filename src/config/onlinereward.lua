@@ -10,12 +10,12 @@ for key, row in pairs(tbl) do
     config.time = row.time      -- 在线时长间隔
     config.num = row.num        -- 奖励次数
     config.rate = row.rate      -- 最小炮倍
-    
+
     -- 奖励
     config.reward = {}
     if row.reward ~= "" then
         local tbl = {}
-        local fields = split(row.reward, ";")
+        local fields = string.split(row.reward, ";")
         for i = 1, #fields, 4 do
             local propId, min, max, weight = fields[i], fields[i + 1], fields[i + 2], fields[i + 3]
             if propId and min and max and weight then
@@ -28,7 +28,7 @@ for key, row in pairs(tbl) do
             end
         end
 
-        if table.len(tbl) > 0 then
+        if table.size(tbl) > 0 then
             config.reward = tbl
         end
     end
@@ -40,7 +40,7 @@ end
 
 for num, _ in ipairs(configs) do
     table.sort(configs[num], function(config1, config2)
-        return config1.rate < config2.rate 
+        return config1.rate < config2.rate
     end)
 end
 
@@ -69,12 +69,12 @@ function ONLINE_REWARD_CONFIG:get_reward_item(gunrate, times)
 
         reward = config.reward
     end
-    
+
     local sum = 0
     for _, val in pairs(reward) do
         sum = sum + val.weight
     end
-    
+
     if sum > 0 then
         local rnd = math.random(sum)
         for _, val in pairs(reward) do
@@ -91,7 +91,7 @@ function ONLINE_REWARD_CONFIG:get_reward_need_time(gunrate, times)
     if not configs[times] then
         return
     end
-    
+
     local time
     for _, config in pairs(configs[times]) do
         if gunrate < config.rate then

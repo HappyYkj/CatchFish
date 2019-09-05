@@ -261,7 +261,7 @@ local function generate_drop_item(player, killed_fishes, gunrate, drop_props)
             if player:get_material_rate() >= FISH_SERVER_CONFIG.forgeDropRequre then
                 -- 掉落锻造材料
                 local forgeMesteralDropWeights = FISH_SERVER_CONFIG.forgeMesteralDropWeights
-                if table.len(forgeMesteralDropWeights) > 0 and skill_prop_percent < math.random(10000) then
+                if table.size(forgeMesteralDropWeights) > 0 and skill_prop_percent < math.random(10000) then
                     local material_id = weightedchoice(forgeMesteralDropWeights)
                     local drop_count = math.floor(1.0 * player:get_material_rate() / FISH_SERVER_CONFIG.forgeDropRequre)
 

@@ -101,7 +101,7 @@ local function _check_user()
         end
     end
 
-    spdlog.info("user", string.format("user_map size : %d, temp_map size : %d, load_map size : %d", table.len(user_map), table.len(temp_map), table.len(load_map)))
+    spdlog.info("user", string.format("user_map size : %d, temp_map size : %d, load_map size : %d", table.size(user_map), table.size(temp_map), table.size(load_map)))
 end
 
 -------------------------------------------------------------------------------

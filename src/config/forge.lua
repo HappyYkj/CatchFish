@@ -5,7 +5,7 @@ end
 
 local configs = {}
 if tbl[990000135] then
-    local fields = split(tbl[990000135].data, ";")
+    local fields = string.split(tbl[990000135].data, ";")
     for i = 1, #fields, 4 do
         if fields[i] and fields[i + 1] and fields[i + 2] and fields[i + 3] then
             configs[#configs + 1] = {
@@ -19,10 +19,10 @@ if tbl[990000135] then
     end
 
     if tbl[990000136] then
-        local fields = split(tbl[990000136].data, ";")
+        local fields = string.split(tbl[990000136].data, ";")
         for i = 1, #fields do
             if configs[i] then
-                local item = split(fields[i], "_")
+                local item = string.split(fields[i], "_")
                 if #item == 2 then
                     configs[i].props = { [tonumber(item[1])] = tonumber(item[2]), }
                 end

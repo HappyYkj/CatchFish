@@ -1,24 +1,47 @@
+local setmetatableindex_
+setmetatableindex_ = function(t, index)
+    if type(t) == "userdata" then
+        local peer = tolua.getpeer(t)
+        if not peer then
+            peer = {}
+            tolua.setpeer(t, peer)
+        end
+        setmetatableindex_(peer, index)
+    else
+        local mt = getmetatable(t)
+        if not mt then mt = {} end
+        if not mt.__index then
+            mt.__index = index
+            setmetatable(t, mt)
+        elseif mt.__index ~= index then
+            setmetatableindex_(mt, index)
+        end
+    end
+end
+setmetatableindex = setmetatableindex_
+
 function class(classname, ...)
     local cls = {__cname = classname}
 
     local supers = {...}
     for _, super in ipairs(supers) do
-        local super_type = type(super)
-        assert(super_type == "nil" or super_type == "table" or super_type == "function",
-            string.format("class() - create class \"%s\" with invalid super class type \"%s\"", classname, super_type))
+        local superType = type(super)
+        assert(superType == "nil" or superType == "table" or superType == "function",
+            string.format("class() - create class \"%s\" with invalid super class type \"%s\"",
+                classname, superType))
 
-        if super_type == "function" then
+        if superType == "function" then
             assert(cls.__create == nil,
-                string.format("class() - create class \"%s\" with more than one creating function", classname))
-
+                string.format("class() - create class \"%s\" with more than one creating function",
+                    classname));
             -- if super is function, set it to __create
             cls.__create = super
-        elseif super_type == "table" then
+        elseif superType == "table" then
             if super[".isclass"] then
                 -- super is native class
                 assert(cls.__create == nil,
-                    string.format("class() - create class \"%s\" with more than one creating function or native class", classname))
-
+                    string.format("class() - create class \"%s\" with more than one creating function or native class",
+                        classname));
                 cls.__create = function() return super:create() end
             else
                 -- super is pure lua class
@@ -30,7 +53,8 @@ function class(classname, ...)
                 end
             end
         else
-            error(string.format("class() - create class \"%s\" with invalid super type", classname), 0)
+            error(string.format("class() - create class \"%s\" with invalid super type",
+                        classname), 0)
         end
     end
 
@@ -39,7 +63,9 @@ function class(classname, ...)
         setmetatable(cls, {__index = cls.super})
     else
         setmetatable(cls, {__index = function(_, key)
-            for _, super in ipairs(cls.__supers) do
+            local supers = cls.__supers
+            for i = 1, #supers do
+                local super = supers[i]
                 if super[key] then return super[key] end
             end
         end})
@@ -49,7 +75,6 @@ function class(classname, ...)
         -- add default constructor
         cls.ctor = function() end
     end
-
     cls.new = function(...)
         local instance
         if cls.__create then
@@ -62,11 +87,9 @@ function class(classname, ...)
         instance:ctor(...)
         return instance
     end
-
     cls.create = function(_, ...)
         return cls.new(...)
     end
-
     cls.inherit = function(_, ...)
         for i = 1, select("#", ...) do
             local x = select(i, ...)

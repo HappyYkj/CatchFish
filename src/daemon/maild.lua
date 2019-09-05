@@ -131,7 +131,7 @@ function MAIL_D:update_mail(player, id, op)
         if mail.attach and #mail.attach > 0 then
             local prop_map = {}
             for _, prop_desc in ipairs(split(mail.attach, ";")) do repeat
-                local fields = split(prop_desc, ",")
+                local fields = string.split(prop_desc, ",")
                 if #fields < 2 then
                     break
                 end

@@ -6,7 +6,7 @@ end
 -- 普通神灯召唤的鱼类Id
 local callfish_ids = {}
 if tbl[990000029] then
-    for _, field in ipairs(split(tbl[990000029].data, ";")) do
+    for _, field in ipairs(string.split(tbl[990000029].data, ";")) do
         callfish_ids[#callfish_ids + 1] = tonumber(field)
     end
 end
@@ -14,7 +14,7 @@ end
 -- 神灯召唤出来的鱼线Id
 local callfish_paths = {}
 if tbl[990000030] then
-    for _, field in ipairs(split(tbl[990000030].data, ";")) do
+    for _, field in ipairs(string.split(tbl[990000030].data, ";")) do
         callfish_paths[#callfish_paths + 1] = tonumber(field) + 300000000
     end
 end
@@ -22,7 +22,7 @@ end
 -- 使用神灯召唤鱼的最大数量
 local callfish_max_count = {}
 if tbl[990000034] then
-    for grade, field in ipairs(split(tbl[990000034].data, ";")) do
+    for grade, field in ipairs(string.split(tbl[990000034].data, ";")) do
         callfish_max_count[grade] = tonumber(field)
     end
 end
@@ -42,7 +42,7 @@ end
 -- 高级神灯召唤的鱼类Id
 local callfish_vip_ids = {}
 if tbl[990000085] then
-    local fields = split(tbl[990000085].data, ";")
+    local fields = string.split(tbl[990000085].data, ";")
     for i = 1, #fields, 2 do
         local key, val = fields[i], fields[i + 1]
         if key and val then

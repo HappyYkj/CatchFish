@@ -20,7 +20,7 @@ for _, row in pairs(tbl) do
     config.cost = {}
     if row.cost ~= "" then
         local tbl = {}
-        local fields = split(row.cost, ";")
+        local fields = string.split(row.cost, ";")
         for i = 1, #fields, 2 do
             local key, val = fields[i], fields[i + 1]
             if key and val then
@@ -28,7 +28,7 @@ for _, row in pairs(tbl) do
             end
         end
 
-        if table.len(tbl) > 0 then
+        if table.size(tbl) > 0 then
             config.cost = tbl
         end
     end
@@ -37,7 +37,7 @@ for _, row in pairs(tbl) do
     config.reward = {}
     if row.reward ~= "" then
         local tbl = {}
-        local fields = split(row.reward, ";")
+        local fields = string.split(row.reward, ";")
         for i = 1, #fields, 3 do
             local rank, prop_id, prop_count = fields[i], fields[i + 1], fields[i + 2]
             if rank and prop_id and prop_count then
@@ -45,7 +45,7 @@ for _, row in pairs(tbl) do
             end
         end
 
-        if table.len(tbl) > 0 then
+        if table.size(tbl) > 0 then
             table.sort(tbl, function(reward1, reward2)
                 return reward1.rank < reward2.rank
             end)

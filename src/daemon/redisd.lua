@@ -77,5 +77,7 @@ end
 -------------------------------------------------------------------------------
 ---! 对外接口
 -------------------------------------------------------------------------------
-SERVICE_D:create(producer)
-SERVICE_D:create(consumer)
+register_post_init(function()
+    SERVICE_D:create(producer)
+    SERVICE_D:create(consumer)
+end)

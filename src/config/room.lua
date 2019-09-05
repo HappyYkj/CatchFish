@@ -23,7 +23,7 @@ for key, row in pairs(tbl) do
     -- 特殊玩法配置
     if row.special_play ~= "" then
         local tbl = {}
-        local fields = split(row.special_play, ";")
+        local fields = string.split(row.special_play, ";")
         for i = 1, #fields do
             local key = fields[i]
             if key then
@@ -31,7 +31,7 @@ for key, row in pairs(tbl) do
             end
         end
 
-        if table.len(tbl) > 0 then
+        if table.size(tbl) > 0 then
             config.special_play = tbl
         end
     end
@@ -39,7 +39,7 @@ for key, row in pairs(tbl) do
     -- 使用鱼线组号
     if row.timeline_groupid ~= "" then
         local tbl = {}
-        local fields = split(row.timeline_groupid, ";")
+        local fields = string.split(row.timeline_groupid, ";")
         for i = 1, #fields, 2 do
             local key, val = fields[i], fields[i + 1]
             if key and val then
@@ -47,7 +47,7 @@ for key, row in pairs(tbl) do
             end
         end
 
-        if table.len(tbl) > 0 then
+        if table.size(tbl) > 0 then
             config.timeline_groupid = tbl
         end
     end

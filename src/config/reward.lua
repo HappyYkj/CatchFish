@@ -11,11 +11,11 @@ for key, row in pairs(tbl) do
     config.minFishTicket = row.minFishTicket or 0   -- 最小鱼券限制
     config.minCrystal = row.minCrystal or 0         -- 最小水晶限制
     config.minLevel = row.minLv or 0                -- 最小等级限制
-    
+
     -- 奖励
     if row.reward ~= "" then
         local tbl = {}
-        local fields = split(row.reward, ";")
+        local fields = string.split(row.reward, ";")
         for i = 1, #fields, 3 do
             local propId, count, percent = fields[i], fields[i + 1], fields[i + 2]
             if propId and count and percent then
@@ -27,15 +27,15 @@ for key, row in pairs(tbl) do
             end
         end
 
-        if table.len(tbl) > 0 then
+        if table.size(tbl) > 0 then
             config.reward = tbl
         end
     end
-    
+
     -- 抽奖奖励备用配置
     if row.reward_1 ~= "" then
         local tbl = {}
-        local fields = split(row.reward_1, ";")
+        local fields = string.split(row.reward_1, ";")
         for i = 1, #fields, 3 do
             local propId, count, percent = fields[i], fields[i + 1], fields[i + 2]
             if propId and count and percent then
@@ -47,7 +47,7 @@ for key, row in pairs(tbl) do
             end
         end
 
-        if table.len(tbl) > 0 then
+        if table.size(tbl) > 0 then
             config.reward_1 = tbl
         end
     end
@@ -60,29 +60,29 @@ table.sort(configs, function(config1, config2)
     if config1.limit > config2.limit then
         return true
     end
-    
+
     if config1.limit < config2.limit then
         return false
     end
-    
+
     -- 鱼券限制
     if config1.minFishTicket > config2.minFishTicket then
         return true
     end
-    
+
     if config1.minFishTicket < config2.minFishTicket then
         return false
     end
-    
+
     -- 水晶限制
     if config1.minCrystal > config2.minCrystal then
         return true
     end
-    
+
     if config1.minCrystal < config2.minCrystal then
         return false
     end
-    
+
     -- 等级限制
     return config1.minLevel > config2.minLevel
 end)
@@ -107,17 +107,17 @@ function REWARD_CONFIG:get_config_by_draw_rate(draw_rate, fishticket, crystal, g
         if config.limit >= 0 and config.limit > draw_rate then
             break
         end
-        
+
         -- 鱼券限制
         if config.minFishTicket >= 0 and config.minFishTicket > fishticket then
             break
         end
-        
+
         -- 水晶限制
         if config.minCrystal >= 0 and config.minCrystal > crystal then
             break
         end
-        
+
         -- 等级限制
         if config.minLevel >= 0 and config.minLevel > grade then
             break
@@ -139,7 +139,7 @@ function REWARD_CONFIG:get_item_by_config(config)
             if rnd < item.percent then
                 return item.propId, item.count
             end
-            rnd = rnd - item.percent 
+            rnd = rnd - item.percent
         end
     end
 end

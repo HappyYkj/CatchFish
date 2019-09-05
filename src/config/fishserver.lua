@@ -18,7 +18,7 @@ end
 -- 奖金鱼抽奖个数
 local drawPriceFishCount = {}
 if tbl[990000007] then
-    for _, field in ipairs(split(tbl[990000007].data, ";")) do
+    for _, field in ipairs(string.split(tbl[990000007].data, ";")) do
         drawPriceFishCount[#drawPriceFishCount + 1] = tonumber(field)
     end
 end
@@ -80,7 +80,7 @@ end
 -- 月卡奖励内容
 local monthCardConfig = {}
 if tbl[990000032] then
-    local fields = split(tbl[990000032].data, ";")
+    local fields = string.split(tbl[990000032].data, ";")
     for i = 1, #fields, 2 do
         local key, val = fields[i], fields[i + 1]
         if key and val then
@@ -92,7 +92,7 @@ end
 -- 普通转盘奖励
 local loginDrawConfig = {}
 if tbl[990000036] then
-    local fields = split(tbl[990000036].data, ";")
+    local fields = string.split(tbl[990000036].data, ";")
     for i = 1, #fields, 3 do
         local propId, propCount, percent = fields[i], fields[i + 1], fields[i + 2]
         if propId and propCount and percent then
@@ -108,7 +108,7 @@ end
 -- VIP转盘奖励
 local vipDrawConfig = {}
 if tbl[990000037] then
-    local fields = split(tbl[990000037].data, ";")
+    local fields = string.split(tbl[990000037].data, ";")
     for i = 1, #fields, 3 do
         local propId, propCount, percent = fields[i], fields[i + 1], fields[i + 2]
         if propId and propCount and percent then
@@ -124,7 +124,7 @@ end
 -- 累计签到奖励
 local signInConfigs = {}
 if tbl[990000040] then
-    local fields = split(tbl[990000040].data, ";")
+    local fields = string.split(tbl[990000040].data, ";")
     for i = 1, #fields, 3 do
         local days, propId, propCount = fields[i], fields[i + 1], fields[i + 2]
         if propId and propCount and days then
@@ -146,7 +146,7 @@ end
 -- 好友每日首次分享奖励
 local shareLinkRewards = {}
 if tbl[990000042] then
-    local fields = split(tbl[990000042].data, ";")
+    local fields = string.split(tbl[990000042].data, ";")
     for i = 1, #fields, 2 do
         local key, val = fields[i], fields[i + 1]
         if key and val then
@@ -158,7 +158,7 @@ end
 -- 用户邀请码奖励
 local inviteRewards = {}
 if tbl[990000043] then
-    local fields = split(tbl[990000043].data, ";")
+    local fields = string.split(tbl[990000043].data, ";")
     for i = 1, #fields, 2 do
         local key, val = fields[i], fields[i + 1]
         if key and val then
@@ -224,7 +224,7 @@ end
 -- 锻造材料投库比
 local mapForgeDropRate = {}
 if tbl[990000062] then
-    local fields = split(tbl[990000062].data, ";")
+    local fields = string.split(tbl[990000062].data, ";")
     for i = 1, #fields, 2 do
         local key, val = fields[i], fields[i + 1]
         if key and val then
@@ -242,7 +242,7 @@ end
 -- 结晶掉落权重
 local forgeMesteralDropWeights = {}
 if tbl[990000064] then
-    local fields = split(tbl[990000064].data, ";")
+    local fields = string.split(tbl[990000064].data, ";")
     for i = 1, #fields, 2 do
         local key, val = fields[i], fields[i + 1]
         if key and val then
@@ -261,7 +261,7 @@ end
 local decomposeFailEnengyCrystalLowerLimit = 0
 local decomposeFailEnengyCrystalLimit = 0
 if tbl[990000066] then
-    local fields = split(tbl[990000066].data, ";")
+    local fields = string.split(tbl[990000066].data, ";")
     decomposeFailEnengyCrystalLowerLimit = tonumber(fields[1])
     decomposeFailEnengyCrystalLimit = tonumber(fields[2])
 end
@@ -276,7 +276,7 @@ end
 local lotteryCostPerRecieve = 0
 local phoneFarePerRecieve = 0
 if tbl[990000068] then
-    local fields = split(tbl[990000068].data, ";")
+    local fields = string.split(tbl[990000068].data, ";")
     lotteryCostPerRecieve = tonumber(fields[1])
     phoneFarePerRecieve = tonumber(fields[2])
 end
@@ -284,7 +284,7 @@ end
 -- 任务宝箱
 local m_mapDailyActiveReward = {}
 if tbl[990000080] then
-    local fields = split(tbl[990000080].data, ";")
+    local fields = string.split(tbl[990000080].data, ";")
     for i = 1, #fields, 2 do
         local key, val = fields[i], fields[i + 1]
         if key and val then
@@ -297,7 +297,7 @@ end
 local randomBossMinScore = 0
 local randomBossMaxScore = 0
 if tbl[990000089] then
-    local fields = split(tbl[990000089].data, ";")
+    local fields = string.split(tbl[990000089].data, ";")
     randomBossMinScore = tonumber(fields[1])
     randomBossMaxScore = tonumber(fields[2])
 end
@@ -311,7 +311,7 @@ end
 -- 免费场剩余子弹与炮倍相关
 local arrFreeArenaGunRate = {}
 if tbl[990000130] then
-    local fields = split(tbl[990000130].data, ";")
+    local fields = string.split(tbl[990000130].data, ";")
     for i = 1, #fields, 2 do
         local num, gunrate = fields[i], fields[i + 1]
         if num and gunrate then
@@ -326,7 +326,7 @@ end
 ---! 限时赛炮倍限制相关
 local arrLimitArenaGunRate = {}
 if tbl[990000134] then
-    local fields = split(tbl[990000134].data, ";")
+    local fields = string.split(tbl[990000134].data, ";")
     for i = 1, #fields, 1 do
         local gunrate = fields[i]
         if gunrate then
@@ -338,7 +338,7 @@ end
 -- 明日礼包奖励
 local tomorrowGifts = {}
 if tbl[990000138] then
-    local fields = split(tbl[990000138].data, ";")
+    local fields = string.split(tbl[990000138].data, ";")
     for i = 1, #fields, 2 do
         local key, val = fields[i], fields[i + 1]
         if key and val then
@@ -394,7 +394,7 @@ end
 
 function FISH_SERVER_CONFIG:get_free_arena_gunrate(num)
     for _, config in ipairs(arrFreeArenaGunRate) do
-        if num <= config.num then 
+        if num <= config.num then
             return config.gunrate
         end
     end

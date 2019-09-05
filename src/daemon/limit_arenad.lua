@@ -642,7 +642,7 @@ function LIMIT_ARENA_D:shoot_bullet(player, data)
 
     ---! 判断子弹数量
     local bullets = desk:get_player_bullets(playerId)
-    if table.len(bullets) >= room_config.max_bullet then
+    if table.size(bullets) >= room_config.max_bullet then
         local result = {}
         result.validate = false
         result.bulletId = data.bulletId
@@ -816,7 +816,7 @@ function LIMIT_ARENA_D:check_status(desk, arena_type)
         if bullet_num <= 0 then
             ---! 判断子弹数量
             local bullets = desk:get_player_bullets(player:get_id())
-            if table.len(bullets) <= 0 then
+            if table.size(bullets) <= 0 then
                 kickout_player(player, arena_type)
                 break
             end

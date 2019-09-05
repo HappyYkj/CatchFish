@@ -12,6 +12,13 @@ local function do_call(linda, reply, data)
 
     local ok, ret = pcall(load(data))
     if ok then
+        local str = string.splitv(data, "=")
+        local ok, ret2 = pcall(load(string.format("local tmp = %s; return tostring(tmp);", str)))
+        if ok then
+            linda:send(10.0, reply, table.pack(true, ret2))
+            return
+        end
+
         linda:send(10.0, reply, table.pack(true, ret))
         return
     end

@@ -13,7 +13,7 @@ for key, row in pairs(tbl) do
     config.reward = {}
     if row.reward ~= "" then
         local tbl = {}
-        local fields = split(row.reward, ";")
+        local fields = string.split(row.reward, ";")
         for i = 1, #fields, 2 do
             local key, val = fields[i], fields[i + 1]
             if key and val then
@@ -21,7 +21,7 @@ for key, row in pairs(tbl) do
             end
         end
 
-        if table.len(tbl) > 0 then
+        if table.size(tbl) > 0 then
             config.reward = tbl
         end
     end
@@ -30,7 +30,7 @@ for key, row in pairs(tbl) do
     config.share_reward = {}
     if row.share_reward ~= "" then
         local tbl = {}
-        local fields = split(row.share_reward, ";")
+        local fields = string.split(row.share_reward, ";")
         for i = 1, #fields, 2 do
             local key, val = fields[i], fields[i + 1]
             if key and val then
@@ -38,7 +38,7 @@ for key, row in pairs(tbl) do
             end
         end
 
-        if table.len(tbl) > 0 then
+        if table.size(tbl) > 0 then
             config.share_reward = tbl
         end
     end
@@ -46,7 +46,7 @@ for key, row in pairs(tbl) do
     -- 炮倍限制
     config.minGunRate, config.maxGunRate = 0, 0
     if row.cannon_limit ~= "" then
-        local fields = split(row.share_reward, ";")
+        local fields = string.split(row.share_reward, ";")
         if #fields == 2 then
             config.minGunRate, config.maxGunRate = tonumber(fields[1]), tonumber(fields[2])
         end

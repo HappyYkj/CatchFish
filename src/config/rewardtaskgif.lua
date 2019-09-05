@@ -11,7 +11,7 @@ for key, row in pairs(tbl) do
     -- 礼包获得奖励
     if row.reward ~= "" then
         local tbl = {}
-        local fields = split(row.reward, ";")
+        local fields = string.split(row.reward, ";")
         for i = 1, #fields, 2 do
             local key, val = fields[i], fields[i + 1]
             if key and val then
@@ -19,7 +19,7 @@ for key, row in pairs(tbl) do
             end
         end
 
-        if table.len(tbl) > 0 then
+        if table.size(tbl) > 0 then
             config.reward = tbl
         end
     end
@@ -27,7 +27,7 @@ for key, row in pairs(tbl) do
     -- 分享获得奖励
     if row.share_reward ~= "" then
         local tbl = {}
-        local fields = split(row.share_reward, ";")
+        local fields = string.split(row.share_reward, ";")
         for i = 1, #fields, 2 do
             local key, val = fields[i], fields[i + 1]
             if key and val then
@@ -35,7 +35,7 @@ for key, row in pairs(tbl) do
             end
         end
 
-        if table.len(tbl) > 0 then
+        if table.size(tbl) > 0 then
             config.share_reward = tbl
         end
     end

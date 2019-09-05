@@ -10,12 +10,12 @@ for key, row in pairs(tbl) do
     config.task_type = tonumber(row.task_type)      -- 任务类型
     config.task_data = tonumber(row.task_data)      -- 任务数据
     config.task_data2 = tonumber(row.task_data2)    -- 任务数据2
-    
+
     -- 任务奖励
     config.reward = {}
     if row.reward ~= "" then
         local tbl = {}
-        local fields = split(row.reward, ";")
+        local fields = string.split(row.reward, ";")
         for i = 1, #fields, 2 do
             local key, val = fields[i], fields[i + 1]
             if key and val then
@@ -23,16 +23,16 @@ for key, row in pairs(tbl) do
             end
         end
 
-        if table.len(tbl) > 0 then
+        if table.size(tbl) > 0 then
             config.reward = tbl
         end
     end
-    
+
     -- 任务奖励备用配置
     config.reward_1 = {}
     if row.reward_1 ~= "" then
         local tbl = {}
-        local fields = split(row.reward_1, ";")
+        local fields = string.split(row.reward_1, ";")
         for i = 1, #fields, 2 do
             local key, val = fields[i], fields[i + 1]
             if key and val then
@@ -40,16 +40,16 @@ for key, row in pairs(tbl) do
             end
         end
 
-        if table.len(tbl) > 0 then
+        if table.size(tbl) > 0 then
             config.reward_1 = tbl
         end
     end
-    
+
     -- 任务分享获得奖励
     config.share_reward = {}
     if row.share_reward ~= "" then
         local tbl = {}
-        local fields = split(row.share_reward, ";")
+        local fields = string.split(row.share_reward, ";")
         for i = 1, #fields, 2 do
             local key, val = fields[i], fields[i + 1]
             if key and val then
@@ -57,11 +57,11 @@ for key, row in pairs(tbl) do
             end
         end
 
-        if table.len(tbl) > 0 then
+        if table.size(tbl) > 0 then
             config.share_reward = tbl
         end
     end
-    
+
     configs[#configs + 1] = config
 end
 

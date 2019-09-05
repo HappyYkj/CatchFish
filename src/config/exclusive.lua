@@ -13,15 +13,15 @@ for key, row in pairs(tbl) do repeat
     config.rewards = {}
     if row.rewards ~= "" then
         local tbl = {}
-        local fields = split(row.rewards, "^")
+        local fields = string.split(row.rewards, "^")
         for i = 1, #fields, 1 do
-            local item = split(fields[i], "-")
+            local item = string.split(fields[i], "-")
             if #item == 2 then
                 tbl[tonumber(item[1])] = tonumber(item[2])
             end
         end
 
-        if table.len(tbl) > 0 then
+        if table.size(tbl) > 0 then
             config.rewards = tbl
         end
     end

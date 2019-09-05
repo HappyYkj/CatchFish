@@ -13,7 +13,7 @@ for key, row in pairs(tbl) do
     config.reward = {}
     if row.reward ~= "" then
         local tbl = {}
-        local fields = split(row.reward, ";")
+        local fields = string.split(row.reward, ";")
         for i = 1, #fields, 2 do
             local key, val = fields[i], fields[i + 1]
             if key and val then
@@ -21,7 +21,7 @@ for key, row in pairs(tbl) do
             end
         end
 
-        if table.len(tbl) > 0 then
+        if table.size(tbl) > 0 then
             config.reward = tbl
         end
     end
@@ -30,7 +30,7 @@ for key, row in pairs(tbl) do
     config.reward_gift = {}
     if row.reward_gift ~= "" then
         local tbl = {}
-        local fields = split(row.reward_gift, ";")
+        local fields = string.split(row.reward_gift, ";")
         for i = 1, #fields, 2 do
             local key, val = fields[i], fields[i + 1]
             if key and val then
@@ -38,7 +38,7 @@ for key, row in pairs(tbl) do
             end
         end
 
-        if table.len(tbl) > 0 then
+        if table.size(tbl) > 0 then
             config.reward_gift = tbl
         end
     end

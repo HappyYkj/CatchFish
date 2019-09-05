@@ -114,7 +114,7 @@ function SHARE_D:process_share(player, share_type, share_args)
 
     local share_func = process_share_map[share_type]
     local rewards = share_func and share_func(player, share_type, share_args) or share_config.reward
-    if not rewards or table.len(rewards) <= 0 then
+    if not rewards or table.size(rewards) <= 0 then
         local result = {}
         result.errorCode = -1
         result.shareType = share_type

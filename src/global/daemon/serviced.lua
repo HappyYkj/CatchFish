@@ -24,18 +24,17 @@ SERVICE_D = {}
 function SERVICE_D:mainloop(seconds_)
     seconds_ = seconds_ or 3.0
     while not has_been_stop() do repeat
-        local service_channels = table.keys(service_map)
-        if #service_channels <= 0 then
+        self.service_channels = self.service_channels or table.keys(service_map)
+        if #self.service_channels <= 0 then
             lanes.sleep(seconds_)
             break
         end
 
-        local name, data = linda:receive(seconds_, table.unpack(service_channels))
+        local name, data = linda:receive(seconds_, table.unpack(self.service_channels))
         if not name then
             break
         end
 
-        -- spdlog.debug("service", string.format("linda recvive name = %s data = %s", name, data))
         if SERVICE_D:dispatch(name, data) then
             break
         end
@@ -59,6 +58,11 @@ function SERVICE_D:exit(mode)
 end
 
 function SERVICE_D:register(name, func)
+    if service_map[name] then
+        if self.service_channels then
+            self.service_channels = nil
+        end
+    end
     service_map[name] = func
 end
 
@@ -67,25 +71,19 @@ function SERVICE_D:dispatch(name, data)
     if not func then
         return false
     end
-
-    local wrap = function()
-        return func(linda, table.unpack(data))
-    end
-
     if name ~= "coroutine_resume" then
-        THREAD_D:create(wrap)
+        THREAD_D:create(function()
+            return func(linda, table.unpack(data))
+        end)
     else
-        wrap()
+        func(linda, table.unpack(data))
     end
     return true
 end
 
 function SERVICE_D:create(func, ...)
     local wrap = function(...)
-        require "global.common.init"
-        require "global.common.utils"
         require "global.core.preload"
-
         xpcall(func, error_traceback, ...)
     end
 
@@ -95,4 +93,8 @@ end
 
 function SERVICE_D:post(channel, ...)
     return linda:send(channel, table.pack(...))
+end
+
+for _, func in pairs(SERVICE_D) do
+    PROFILE_D:prevent(func)
 end

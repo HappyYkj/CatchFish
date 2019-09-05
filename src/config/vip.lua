@@ -17,7 +17,7 @@ for key, row in pairs(tbl) do
     config.skill_plus = {}
     if row.skill_plus ~= "" then
         local tbl = {}
-        local fields = split(row.skill_plus, ";")
+        local fields = string.split(row.skill_plus, ";")
         for i = 1, #fields, 2 do
             local key, val = fields[i], fields[i + 1]
             if key and val then
@@ -25,15 +25,15 @@ for key, row in pairs(tbl) do
             end
         end
 
-        if table.len(tbl) > 0 then
+        if table.size(tbl) > 0 then
             config.skill_plus = tbl
         end
     end
-    
+
     config.daily_items_reward = {}
     if row.daily_items_reward ~= "" then
         local tbl = {}
-        local fields = split(row.daily_items_reward, ";")
+        local fields = string.split(row.daily_items_reward, ";")
         for i = 1, #fields, 2 do
             local key, val = fields[i], fields[i + 1]
             if key and val then
@@ -41,15 +41,15 @@ for key, row in pairs(tbl) do
             end
         end
 
-        if table.len(tbl) > 0 then
+        if table.size(tbl) > 0 then
             config.daily_items_reward = tbl
         end
     end
-    
+
     config.bonusPoints = {}
     if row.bonusPoints ~= "" then
         local tbl = {}
-        local fields = split(row.bonusPoints, ";")
+        local fields = string.split(row.bonusPoints, ";")
         for i = 1, #fields, 2 do
             local key, val = fields[i], fields[i + 1]
             if key and val then
@@ -57,15 +57,15 @@ for key, row in pairs(tbl) do
             end
         end
 
-        if table.len(tbl) > 0 then
+        if table.size(tbl) > 0 then
             config.bonusPoints = tbl
         end
     end
-    
+
     config.freeGameTimes = {}
     if row.freeGameTimes ~= "" then
         local tbl = {}
-        local fields = split(row.freeGameTimes, ";")
+        local fields = string.split(row.freeGameTimes, ";")
         for i = 1, #fields, 2 do
             local key, val = fields[i], fields[i + 1]
             if key and val then
@@ -73,15 +73,15 @@ for key, row in pairs(tbl) do
             end
         end
 
-        if table.len(tbl) > 0 then
+        if table.size(tbl) > 0 then
             config.freeGameTimes = tbl
         end
     end
-    
+
     config.vipGift = {}
     if row.vipGift ~= "" then
         local tbl = {}
-        local fields = split(row.vipGift, ";")
+        local fields = string.split(row.vipGift, ";")
         for i = 1, #fields, 2 do
             local key, val = fields[i], fields[i + 1]
             if key and val then
@@ -89,7 +89,7 @@ for key, row in pairs(tbl) do
             end
         end
 
-        if table.len(tbl) > 0 then
+        if table.size(tbl) > 0 then
             config.vipGift = tbl
         end
     end

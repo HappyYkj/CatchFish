@@ -17,7 +17,7 @@ for key, row in pairs(tbl) do
     config.task_data = {}
     if row.task_data ~= "" then
         local tbl = {}
-        local fields = split(row.task_data, ";")
+        local fields = string.split(row.task_data, ";")
         for i = 1, #fields, 2 do
             local key, val = fields[i], fields[i + 1]
             if key and val then
@@ -25,7 +25,7 @@ for key, row in pairs(tbl) do
             end
         end
 
-        if table.len(tbl) > 0 then
+        if table.size(tbl) > 0 then
             config.task_data = tbl
         end
     end
@@ -34,7 +34,7 @@ for key, row in pairs(tbl) do
     config.reward = {}
     if row.reward ~= "" then
         local tbl = {}
-        local fields = split(row.reward, ";")
+        local fields = string.split(row.reward, ";")
         for i = 1, #fields, 2 do
             local key, val = fields[i], fields[i + 1]
             if key and val then
@@ -42,7 +42,7 @@ for key, row in pairs(tbl) do
             end
         end
 
-        if table.len(tbl) > 0 then
+        if table.size(tbl) > 0 then
             config.reward = tbl
         end
     end
@@ -65,7 +65,7 @@ function REWARD_TASK_CONFIG:get_config(timelineId, roomType)
 end
 
 function REWARD_TASK_CONFIG:get_gift_id(config)
-    if table.len(config.reward) > 0 then
+    if table.size(config.reward) > 0 then
         return weightedchoice(config.reward)
     end
 end

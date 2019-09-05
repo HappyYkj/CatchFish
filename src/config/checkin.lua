@@ -19,7 +19,7 @@ for key, row in pairs(tbl) do repeat
     config.reward_props = {}
     if row.reward_props ~= "" then
         local tbl = {}
-        local fields = split(row.reward_props, ";")
+        local fields = string.split(row.reward_props, ";")
         for i = 1, #fields, 2 do
             local key, val = fields[i], fields[i + 1]
             if key and val then
@@ -27,7 +27,7 @@ for key, row in pairs(tbl) do repeat
             end
         end
 
-        if table.len(tbl) > 0 then
+        if table.size(tbl) > 0 then
             config.reward_props = tbl
         end
     end
@@ -36,7 +36,7 @@ for key, row in pairs(tbl) do repeat
     config.vip_props = {}
     if row.vip_props ~= "" then
         local tbl = {}
-        local fields = split(row.vip_props, ";")
+        local fields = string.split(row.vip_props, ";")
         for i = 1, #fields, 2 do
             local key, val = fields[i], fields[i + 1]
             if key and val then
@@ -44,7 +44,7 @@ for key, row in pairs(tbl) do repeat
             end
         end
 
-        if table.len(tbl) > 0 then
+        if table.size(tbl) > 0 then
             config.vip_props = tbl
         end
     end
@@ -53,7 +53,7 @@ for key, row in pairs(tbl) do repeat
     config.share_props = {}
     if row.share_props ~= "" then
         local tbl = {}
-        local fields = split(row.share_props, ";")
+        local fields = string.split(row.share_props, ";")
         for i = 1, #fields, 2 do
             local key, val = fields[i], fields[i + 1]
             if key and val then
@@ -61,7 +61,7 @@ for key, row in pairs(tbl) do repeat
             end
         end
 
-        if table.len(tbl) > 0 then
+        if table.size(tbl) > 0 then
             config.share_props = tbl
         end
     end
@@ -70,7 +70,7 @@ for key, row in pairs(tbl) do repeat
     config.share_vip_props = {}
     if row.share_vip_props ~= "" then
         local tbl = {}
-        local fields = split(row.share_vip_props, ";")
+        local fields = string.split(row.share_vip_props, ";")
         for i = 1, #fields, 2 do
             local key, val = fields[i], fields[i + 1]
             if key and val then
@@ -78,7 +78,7 @@ for key, row in pairs(tbl) do repeat
             end
         end
 
-        if table.len(tbl) > 0 then
+        if table.size(tbl) > 0 then
             config.share_vip_props = tbl
         end
     end

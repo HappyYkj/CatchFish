@@ -15,12 +15,12 @@ for key, row in pairs(tbl) do
     config.alms_cd_array = {}
     if row.alms_cd_array ~= "" then
         local tbl = {}
-        local fields = split(row.alms_cd_array, ";")
+        local fields = string.split(row.alms_cd_array, ";")
         for i = 1, #fields, 1 do
             tbl[i] = tonumber(fields[i])
         end
 
-        if table.len(tbl) > 0 then
+        if table.size(tbl) > 0 then
             config.alms_cd_array = tbl
         end
     end
@@ -29,7 +29,7 @@ for key, row in pairs(tbl) do
     config.alms_reward_array = {}
     if row.alms_reward_array ~= "" then
         local tbl = {}
-        local fields = split(row.alms_reward_array, ";")
+        local fields = string.split(row.alms_reward_array, ";")
         for i = 1, #fields, 2 do
             local key, val = fields[i], fields[i + 1]
             if key and val then
@@ -37,7 +37,7 @@ for key, row in pairs(tbl) do
             end
         end
 
-        if table.len(tbl) > 0 then
+        if table.size(tbl) > 0 then
             config.alms_reward_array = tbl
         end
     end

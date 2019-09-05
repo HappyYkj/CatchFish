@@ -17,7 +17,7 @@ for key, row in pairs(tbl) do repeat
     config.reward_props = {}
     if row.reward_props ~= "" then
         local tbl = {}
-        local fields = split(row.reward_props, ";")
+        local fields = string.split(row.reward_props, ";")
         for i = 1, #fields, 2 do
             local key, val = fields[i], fields[i + 1]
             if key and val then
@@ -25,7 +25,7 @@ for key, row in pairs(tbl) do repeat
             end
         end
 
-        if table.len(tbl) > 0 then
+        if table.size(tbl) > 0 then
             config.reward_props = tbl
         end
     end

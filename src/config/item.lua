@@ -22,7 +22,7 @@ for key, row in pairs(tbl) do
     -- 购买单价
     config.price_type, config.price_value = 0, 0
     if row.price ~= "" then
-        local fields = split(row.price, ";")
+        local fields = string.split(row.price, ";")
         if #fields == 2 then
             config.price_type, config.price_value = tonumber(fields[1]), tonumber(fields[2])
         end
@@ -31,7 +31,7 @@ for key, row in pairs(tbl) do
     -- 出售价值
     config.sell_type, config.sell_value = 0, 0
     if row.sell_value ~= "" then
-        local fields = split(row.sell_value, ";")
+        local fields = string.split(row.sell_value, ";")
         if #fields == 2 then
             config.sell_type, config.sell_value = tonumber(fields[1]), tonumber(fields[2])
         end

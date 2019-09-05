@@ -17,7 +17,7 @@ for key, row in pairs(tbl) do
     config.unlock_item = {}
     if row.unlock_item ~= "" then
         local tbl = {}
-        local fields = split(row.unlock_item, ";")
+        local fields = string.split(row.unlock_item, ";")
         for i = 1, #fields, 2 do
             local key, val = fields[i], fields[i + 1]
             if key and val then
@@ -25,7 +25,7 @@ for key, row in pairs(tbl) do
             end
         end
 
-        if table.len(tbl) > 0 then
+        if table.size(tbl) > 0 then
             config.unlock_item = tbl
         end
     end
@@ -34,7 +34,7 @@ for key, row in pairs(tbl) do
     config.share_reward = {}
     if row.share_reward ~= "" then
         local tbl = {}
-        local fields = split(row.share_reward, ";")
+        local fields = string.split(row.share_reward, ";")
         for i = 1, #fields, 2 do
             local key, val = fields[i], fields[i + 1]
             if key and val then
@@ -42,7 +42,7 @@ for key, row in pairs(tbl) do
             end
         end
 
-        if table.len(tbl) > 0 then
+        if table.size(tbl) > 0 then
             config.share_reward = tbl
         end
     end
@@ -51,7 +51,7 @@ for key, row in pairs(tbl) do
     config.phaseReward = {}
     if row.phaseReward ~= "" then
         local tbl = {}
-        local fields = split(row.phaseReward, ";")
+        local fields = string.split(row.phaseReward, ";")
         for i = 1, #fields, 2 do
             local key, val = fields[i], fields[i + 1]
             if key and val then
@@ -59,7 +59,7 @@ for key, row in pairs(tbl) do
             end
         end
 
-        if table.len(tbl) > 0 then
+        if table.size(tbl) > 0 then
             config.phaseReward = tbl
         end
     end

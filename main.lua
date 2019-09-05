@@ -1,13 +1,7 @@
----! 初始化随机数
-math.randomseed(tonumber(tostring(os.time()):reverse():sub(1,6)))
-
 require "const"
 require "global.core.preload"
 require "global.core.lfstool"
-require "global.common.init"
-require "global.common.dump"
-require "global.common.utils"
-require "global.common.class"
+require "global.daemon.profiled"
 require "global.daemon.serviced"
 
 local config = require "config"
@@ -28,8 +22,26 @@ load_all("log")
 local cost = os.clock() - secs
 printf("Load all files OK. cost total secs = %s", cost)
 
+printf("start post init ...")
+local tick = os.clock()
 post_init()
-SERVICE_D:mainloop()
-post_dest()
+local cost = os.clock() - tick
+printf("finish init cost tick = %s", cost)
 
+PROFILE_D:start()
+SERVICE_D:mainloop()
+PROFILE_D:stop()
+
+printf("start post dest ...")
+local tick = os.clock()
+post_dest()
+local cost = os.clock() - tick
+printf("finish dest cost tick = %s", cost)
+
+printf("start exit service ...")
+local tick = os.clock()
 SERVICE_D:exit()
+local cost = os.clock() - tick
+printf("finish exit service cost tick = %s", cost)
+
+PROFILE_D:report()

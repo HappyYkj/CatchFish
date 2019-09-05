@@ -9,12 +9,12 @@ for key, row in pairs(tbl) do
     config.level = row.level
     config.exp = row.exp
     config.doubleshare = row.doubleshare
-    
+
     -- 奖励物品
     config.level_reward = {}
     if row.level_reward ~= "" then
         local tbl = {}
-        local fields = split(row.level_reward, ";")
+        local fields = string.split(row.level_reward, ";")
         for i = 1, #fields, 2 do
             local key, val = fields[i], fields[i + 1]
             if key and val then
@@ -22,11 +22,11 @@ for key, row in pairs(tbl) do
             end
         end
 
-        if table.len(tbl) > 0 then
+        if table.size(tbl) > 0 then
             config.level_reward = tbl
         end
     end
-    
+
     configs[config.level] = config
 end
 

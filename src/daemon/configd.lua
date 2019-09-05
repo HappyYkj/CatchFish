@@ -26,7 +26,7 @@ for name, dict in pairs(json.decode(load_file("databin.json"))) do repeat
             if name ~= "fishpathEx" then
                 local val = lst[idx]
                 if type(val) == "string" then
-                    val = trim(val)
+                    val = string.strip(val)
                 end
                 tbl[id][key] = val
             else
