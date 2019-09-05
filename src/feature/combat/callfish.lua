@@ -8,7 +8,7 @@ function M:add_callfish(playerId, pathId, fishId, frameId, callfishId)
     callfish.fishId = fishId
     callfish.frameId = frameId
     callfish.freezeTime = 0
-    callfish.callFishTimestamp = os.mtime()
+    callfish.callFishTimestamp = os.clock()
     self:set("callfish", playerId, callfishId, callfish)
 end
 
@@ -38,7 +38,7 @@ function M:flush_visable_callfishes(start_time)
         return
     end
 
-    local now = os.mtime()
+    local now = os.clock()
     for playerId, _ in pairs(callfishes) do
         for fishId, callfish in pairs(callfishes[playerId]) do
             local freeze_time = now - math.max(start_time, callfish.callFishTimestamp)
@@ -78,7 +78,7 @@ function M:is_fish_visable(callfish)
     end
 
     ---! 获取当前时间
-    local now = os.mtime()
+    local now = os.clock()
 
     ---! 获取冰冻历史时长
     local freeze_history_time = callfish.freezeTime

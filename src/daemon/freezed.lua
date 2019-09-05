@@ -19,13 +19,13 @@ local function finish_freeze(desk)
     local freeze_timespan = desk:query_temp("freeze", "timespan") or 0
 
     ---! 累加历史冰冻时长
-    desk:set_temp("freeze", "timespan", freeze_timespan + os.mtime() - freeze_start_time)
+    desk:set_temp("freeze", "timespan", freeze_timespan + os.clock() - freeze_start_time)
 
     ---! 广播冰冻结束消息
     local result = {}
     desk:brocast_packet("MSGS2CFreezeEnd", result)
 
-    spdlog.debug("freeze", string.format("finish freeze, freeze_start_time = %s, freeze_timespan = %s", freeze_start_time, os.mtime() - freeze_start_time))
+    spdlog.debug("freeze", string.format("finish freeze, freeze_start_time = %s, freeze_timespan = %s", freeze_start_time, os.clock() - freeze_start_time))
 end
 
 -------------------------------------------------------------------------------
@@ -40,7 +40,7 @@ function FREEZE_D:begin_freeze(desk, player)
 
     if not desk:is_in_freeze() then
         ---! 设置冰冻开始时间
-        desk:set_temp("freeze", "start_time", os.mtime())
+        desk:set_temp("freeze", "start_time", os.clock())
     end
 
     ---! 停止之前定时器
@@ -77,10 +77,10 @@ function FREEZE_D:get_freeze_timespan(desk)
     ---! 当前已冰时长
     if desk:is_in_freeze() then
         ---! 获取冰冻开始时间
-        local freeze_start_time = desk:query_temp("freeze", "start_time") or os.mtime()
+        local freeze_start_time = desk:query_temp("freeze", "start_time") or os.clock()
 
         ---! 累加历史冰冻时长
-        freeze_timespan = freeze_timespan + os.mtime() - freeze_start_time
+        freeze_timespan = freeze_timespan + os.clock() - freeze_start_time
     end
 
     ---! 返回当前冰冻时长

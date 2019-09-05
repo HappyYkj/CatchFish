@@ -138,7 +138,7 @@ function USER_D:load_user(user_id)
     user_id = tonumber(user_id)
 
     ---! 获取当前时间
-    local now = os.mtime()
+    local now = os.clock()
 
     ---! 设置加载状态
     load_map[user_id] = now
@@ -146,7 +146,7 @@ function USER_D:load_user(user_id)
     ---! 开始加载对象
     spdlog.debug("userd", string.format("user [%s] start load ...", user_id))
     local user_ob = _load_user(user_id)
-    spdlog.debug("userd", string.format("user [%s] load cost time = %s", user_id, os.mtime() - now))
+    spdlog.debug("userd", string.format("user [%s] load cost time = %s", user_id, os.clock() - now))
 
     ---! 解除加载状态
     load_map[user_id] = nil

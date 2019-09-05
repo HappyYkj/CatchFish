@@ -80,7 +80,7 @@ local function generate_random_timeline(desk)
     desk:set_temp("fishGroupComingNotified", false)
 
     ---! 重置鱼线开始时间
-    desk:set_temp("startTickCount", os.mtime())
+    desk:set_temp("startTickCount", os.clock())
 
     ---! 清空所有杀鱼记录
     desk:remove_all_killed_fishes()
@@ -108,7 +108,7 @@ local function generate_random_fishgroup(desk)
     desk:set_temp("isInTimeline", false)
 
     ---! 重置鱼线开始时间
-    desk:set_temp("startTickCount", os.mtime())
+    desk:set_temp("startTickCount", os.clock())
 
     ---! 清空所有杀鱼记录
     desk:remove_all_killed_fishes()
@@ -429,7 +429,7 @@ function ROOM_D:get_frame_count(desk)
     local startTickCount = desk:query_temp("startTickCount") or 0
 
     ---! 计算时间跨度
-    local timespan = os.mtime() - startTickCount
+    local timespan = os.clock() - startTickCount
 
     ---! 扣除冰冻时长
     timespan = timespan - desk:get_freeze_timespan()
