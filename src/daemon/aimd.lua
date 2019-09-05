@@ -9,7 +9,7 @@ function AIM_D:start_aim_fish(player, duration, skill_plus)
     local duration = 1.0 * duration * skill_plus / 100
 
     ---! 计算结束时间
-    local end_time = os.clock() + 1.0 * duration * skill_plus / 100 * 1000
+    local end_time = os.clock() + 1.0 * duration * skill_plus / 100
 
     ---! 记录结束时间
     player:set_temp("aim", "end_time", end_time)
