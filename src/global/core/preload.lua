@@ -20,5 +20,23 @@ function error_traceback(err)
     print(debug.traceback())
 end
 
+function randomchoice(t)
+    return t[math.random(#t)]
+end
+
+function weightedchoice(t)
+    local sum = 0
+    for _, v in pairs(t) do
+        assert(v >= 0, "weight value less than zero")
+        sum = sum + v
+    end
+    assert(sum ~= 0, "all weights are zero")
+    local rnd = random(sum)
+    for k, v in pairs(t) do
+        if rnd < v then return k end
+        rnd = rnd - v
+    end
+end
+
 ---! 初始化随机数
 math.randomseed(tonumber(tostring(os.time()):reverse():sub(1,6)))

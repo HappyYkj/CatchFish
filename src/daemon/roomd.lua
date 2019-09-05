@@ -412,7 +412,7 @@ end
 
 function ROOM_D:check_fishgroup_coming(desk, frame_count)
     local frame_count = frame_count or desk:get_frame_count()
-    return 1.0 * FISH_GROUP_TIME * 1000 / 50 - frame_count < 1.0 * FISH_SERVER_CONFIG.fishGroupNotifySeconds * 1000 / 50
+    return FISH_GROUP_TIME * 20 - frame_count < FISH_SERVER_CONFIG.fishGroupNotifySeconds * 20
 end
 
 function ROOM_D:get_fishgroup_left_seconds(desk, frame_count)
@@ -421,7 +421,7 @@ function ROOM_D:get_fishgroup_left_seconds(desk, frame_count)
     end
 
     local frame_count = frame_count or desk:get_frame_count()
-    return math.floor((1.0 * FISH_GROUP_TIME * 1000 / 50 - frame_count) / 20)
+    return math.floor((FISH_GROUP_TIME * 20 - frame_count) / 20)
 end
 
 function ROOM_D:get_frame_count(desk)
@@ -435,5 +435,5 @@ function ROOM_D:get_frame_count(desk)
     timespan = timespan - desk:get_freeze_timespan()
 
     ---! 计算当前帧数
-    return math.floor(1.0 * timespan / 50)
+    return math.floor(timespan * 20)
 end
